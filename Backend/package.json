@@ -3,8 +3,9 @@
   "version": "1.0.0",
   "description": "\"Backend for BlogSite\"",
   "main": "index.js",
+  "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "nodemon index.js"
   },
   "author": "\"Mahima & Rahul\"",
   "license": "ISC",
@@ -13,6 +14,7 @@
     "joi": "^17.10.1",
     "jsonwebtoken": "^9.0.2",
     "knex": "^2.5.1",
-    "mysql": "^2.18.1"
+    "mysql": "^2.18.1",
+    "nodemon": "^3.0.1"
   }
 }
