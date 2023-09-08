@@ -31,9 +31,9 @@ const signUp = Joi.object({
     "string.empty": `"username" is a required field.`,
     "string.length": `"username" must be between 4 to 20 character long.`,
   }),
-  password: Joi.string().trim().min(1).max(35).required().messages({
+  password: Joi.string().trim().min(8).max(35).regex(/^(?=.*\d)(?=.*[!@#$%^&*])(?=.*[a-z])(?=.*[A-Z]).{8,35}$/).required().messages({
     "string.empty": `"password" is a required field.`,
-    "string.length": `"password" must contain 35 characters.`,
+    "string.length": `"password" must contain 8 to 35 characters.`,
   }),
 });
 
