@@ -38,6 +38,16 @@ const signUp = Joi.object({
   role: Joi.string().trim().valid('Author','Reader').required() 
 });
 
+const login = Joi.object({
+  username: Joi.string().min(4).required().messages({
+    "string.empty": `"username" is a required field.`,
+    "string.length": `"username" must be between 4 to 20 character long.`,
+  }),
+  password: Joi.string().trim().min(8).max(35).regex(/^(?=.*\d)(?=.*[!@#$%^&*])(?=.*[a-z])(?=.*[A-Z]).{8,35}$/).required().messages({
+    "string.empty": `"password" is a required field.`,
+    "string.length": `"password" must contain 8 to 35 characters.`,
+  })
+})
 export default {
   signUp,
 };
