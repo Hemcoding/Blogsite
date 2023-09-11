@@ -6,7 +6,7 @@ import constant from "../../helpers/constant.js"
 
 const registerUser = async(req,res)=>{
   try {
-      user.signUp.validate(req.body)
+      user.signUp.validateAsync(req.body)
 
       const {
         username , password , firstname , lastname , email , mobileno , role
