@@ -36,6 +36,31 @@ const addRole = async(req,res)=>{
 
 }
 
+const showRoles = async(req,res)=>{
+    try {
+        const data = await knex('roles').select('role_id','name')
+
+        if(data.length == 0){
+            return res.json({
+                Error : false,
+                Message :"No data"
+            })
+        }
+
+        res.json({
+            Error :false,
+            Message:"Data has been fetched",
+            Data:data
+        })
+    } catch (error) {
+        return res.json({
+            Error:true,
+            Message:error.message
+        }) 
+    }
+}
+
 export default {
-    addRole
+    addRole,
+    showRoles
 }
