@@ -1,4 +1,4 @@
-import knex from '../config/dbconfig.js'
+import knex from '../../config/dbconfig.js'
 
 const checkUsername =async(username) =>{
     

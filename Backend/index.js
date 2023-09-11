@@ -1,7 +1,7 @@
 import express from 'express'
 import constant from './src/helpers/constant.js'
-import users from './src/routes/users.js'
-import roles from './src/routes/roles.js'
+import users from './src/routes/users/users.js'
+import roles from './src/routes/roles/roles.js'
 
 const app = express()
 

@@ -1,5 +1,5 @@
-import knex from '../config/dbconfig.js'
-import roles from '../validation/roles.js'
+import knex from '../../config/dbconfig.js'
+import roles from '../../validation/roles/roles.js'
 
 const addRole = async(req,res)=>{
     try {

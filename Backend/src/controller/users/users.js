@@ -1,8 +1,8 @@
-import knex from "../config/dbconfig.js"
-import user from '../validation/users.js'
+import knex from "../../config/dbconfig.js"
+import user from '../../validation/users/users.js'
 import checkUsername from "./username.js"
 import bcrypt from "bcrypt"
-import constant from "../helpers/constant.js"
+import constant from "../../helpers/constant.js"
 
 const registerUser = async(req,res)=>{
   try {
@@ -27,11 +27,14 @@ const registerUser = async(req,res)=>{
         })
       }
 
-     bcrypt.hash(password ,constant.saltRounds ,async(err,hash)=>{
-       // console.log(hash)
-       const data = {
+      let hashed
+    await bcrypt.hash(password ,constant.saltRounds).then(async(result)=>{
+         hashed = result
+     });
+
+      const data = {
         username :username.toLowerCase().trim(),
-        password:hash,
+        password:hashed,
         first_name:firstname.charAt(0).toUpperCase() + firstname.slice(1).trim(),
         last_name:lastname.charAt(0).toUpperCase() + lastname.slice(1).trim(),
         email:email,
@@ -54,8 +57,6 @@ const registerUser = async(req,res)=>{
         Message:"NO data has been inserted"
     })
 
-
-      })
      
   } catch (error) {
     return res.json({
