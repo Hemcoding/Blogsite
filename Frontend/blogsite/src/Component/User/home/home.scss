@@ -1,0 +1,29 @@
+.wrapper{
+    width:80%;
+    margin: auto;
+
+    .heading{
+        font-size: 2rem;
+        font-weight: 600;
+        color: rgb(246, 162, 4);
+        // margin: auto;
+        text-align: center;
+        // width:80%;
+        padding-top: 10px;
+    }
+    .select{
+        margin: auto;
+        // width: 80%;
+        width: fit-content;
+
+        #category{
+            padding: 5px;
+            border: 2px solid orange;
+            border-radius: 5px;
+
+            option{
+                padding: 5px;
+            }
+        }
+    }
+}
