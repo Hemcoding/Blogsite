@@ -8,7 +8,7 @@ const verifyBlog = Joi.object({
         "string.empty": `"Blog title" is a required field.`,
         "string.length":`"Blog description" must have 120 words and maximum upto 1500 words` 
     }),
-    category_id: Joi.number().min(1).max(20).required().messages({
+    category: Joi.string().min(1).max(20).required().messages({
         "string.empty":`"category id" is a required field.`
     }), 
 })

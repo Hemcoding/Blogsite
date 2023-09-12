@@ -22,9 +22,7 @@ const registerUser = async (req, res) => {
         Message: "Please provide proper role",
       });
     }
-    if (
-      (await checkUsername(username, email)) == "Username or Email Unavailable"
-    ) {
+    if ( await checkUsername(username, email) == "Username or Email Unavailable" ) {
       return res.json({
         Error: true,
         Message: "Username or email already exsits",
