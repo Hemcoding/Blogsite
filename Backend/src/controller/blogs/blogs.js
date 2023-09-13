@@ -3,6 +3,7 @@ import blog from '../../middleware/blogs/blogs.js'
 import constant from '../../helpers/constant.js'
 import formidable from 'formidable'
 import jwt from 'jsonwebtoken'
+import blogs from '../../validation/blogs/blogs.js'
 
 const postBlog = async(req,res)=>{
     try {
@@ -12,21 +13,32 @@ const postBlog = async(req,res)=>{
         //   return res.render('homepage')
         //  }
          const form = formidable({});
-
+        
          // Parse the form data
       const [fields, files] = await form.parse(req)
      // console.log(files)
-      const formData = {
-        fields:fields,
-        files:files
+   
+      let {title, description ,category} =fields
+
+      const data2 = {
+        title:title[0],
+        description:description[0],
+        category:category[0]
       }
+
+     const {error} = await blogs.verifyBlog.validateAsync(data2)
+     if(error){
+        return res.json({
+            Error:true,
+            Message:error.message
+        })
+     }
         const token = req.headers.authorization.split(" ")[1]
-       console.log(token)
+        console.log(token)
         const Tokendata = jwt.verify(token, constant.accessToken.secret).data.id
 
-        const {title, description ,category} = formData.fields
-        const {image} = formData.files
-        const checkBlog = await knex('blogs').select('*').where("title" ,'=',title[0]).andWhere("description",'=',description[0])
+        const {image} = files
+        const checkBlog = await knex('blogs').select('*').where("title" ,'=',data2.title).andWhere("description",'=',data2.description)
 
         if(checkBlog.length >=1){
             return res.json({
@@ -35,7 +47,7 @@ const postBlog = async(req,res)=>{
             })
         }
        
-        const category_id = await knex('categories').select('category_id').where('name',category[0])
+        const category_id = await knex('categories').select('category_id').where('name',data2.category)
 
         const data ={
             title:title,
@@ -73,6 +85,39 @@ const postBlog = async(req,res)=>{
     }
 }
 
+const fetchBlogs = async(req,res)=>{
+    try {
+        const {offset} = req.body
+        const blogs = await knex('blogs').select('*').limit(10).offset(offset*10).orderBy('blog_id','desc')
+
+        if(blogs.length ==0){
+            return res.json({
+                Error :true,
+                Message :"No blogs to fetch"
+            })
+        }
+
+        return res.json({
+            Error:false,
+            Message :"blogs has been fetch",
+            Data:blogs
+        })
+
+    } catch (error) {
+        if(error.isJoi){
+            return res.json({
+                Error:true,
+                Message:error.message
+            })
+        }
+        return res.json({
+            Error:true,
+            Message:error.message
+        })
+    }
+}
+
 export default {
-    postBlog
+    postBlog,
+    fetchBlogs
 }

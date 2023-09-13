@@ -4,6 +4,7 @@ import blogs from '../../controller/blogs/blogs.js'
 const router = express.Router()
 
 router.post('/postBlog',blogs.postBlog)
+router.get('/getBlogs',blogs.fetchBlogs)
 
 export default {
     router
