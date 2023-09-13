@@ -3,7 +3,13 @@ import roles from '../../validation/roles/roles.js'
 
 const addRole = async(req,res)=>{
     try {
-        roles.verifyRoles.validateAsync(req.body)
+       const error = await roles.verifyRoles.validateAsync(req.body)
+        if(error){
+            return res.json({
+                Error:true,
+                Message:error.message
+            })
+         }
 
         const {name} = req.body
 

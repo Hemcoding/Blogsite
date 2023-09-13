@@ -7,8 +7,13 @@ import jwt from 'jsonwebtoken'
 
 const registerUser = async (req, res) => {
   try {
-    user.signUp.validateAsync(req.body);
-
+   const error = await user.signUp.validateAsync(req.body);
+   if(error){
+    return res.json({
+        Error:true,
+        Message:error.message
+    })
+ }
     const { username, password, firstname, lastname, email, mobileno, role } =
       req.body;
 

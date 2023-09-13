@@ -90,7 +90,7 @@ const fetchBlogs = async(req,res)=>{
         const {offset} = req.body
         const blogs = await knex('blogs').select('*').limit(10).offset(offset*10).orderBy('blog_id','desc')
 
-        if(blogs.length ==0){
+        if(blogs.length == 0){
             return res.json({
                 Error :true,
                 Message :"No blogs to fetch"
@@ -104,12 +104,6 @@ const fetchBlogs = async(req,res)=>{
         })
 
     } catch (error) {
-        if(error.isJoi){
-            return res.json({
-                Error:true,
-                Message:error.message
-            })
-        }
         return res.json({
             Error:true,
             Message:error.message
