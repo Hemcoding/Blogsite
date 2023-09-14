@@ -7,6 +7,7 @@ const router = express.Router()
 router.post('/postBlog',blog.upload.single('image'),blogs.postBlog)
 router.post('/getBlogs',blogs.fetchBlogs)
 router.post('/likes',blogs.likes)
+router.post('/dislikes',blogs.dislikes)
 
 export default {
     router

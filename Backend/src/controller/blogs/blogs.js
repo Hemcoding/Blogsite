@@ -4,6 +4,10 @@ import constant from '../../helpers/constant.js'
 import formidable from 'formidable'
 import jwt from 'jsonwebtoken'
 import blogs from '../../validation/blogs/blogs.js'
+import fs from 'fs'
+import path from 'path'
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
 
 
 const tempblog = async(req,res)=>{
@@ -105,9 +109,10 @@ const postBlog = async(req,res)=>{
         }
 
         const {title , description , category} = req.body 
-        const {path} = req.file
+        const {destination , filename} = req.file
+       // console.log(req.file)
         const token = req.headers.authorization.split(" ")[1]
-        console.log(token)
+       // console.log(token)
         const Tokendata = jwt.verify(token, constant.accessToken.secret).data.id
 
         const checkBlog = await knex('blogs').select('*').where("title" ,'=',title).andWhere("description",'=',description)
@@ -124,7 +129,8 @@ const postBlog = async(req,res)=>{
         const data ={
             title:title,
             description:description,
-            image:path,
+            image_destination:destination,
+            image_filename:filename,
             publish_date:new Date(),
             likes:0,
             dislikes:0,
@@ -160,7 +166,7 @@ const postBlog = async(req,res)=>{
 const fetchBlogs = async(req,res)=>{
     try {
         const {offset} = req.body
-        const blogs = await knex('blogs').select('*').limit(10).offset(offset*10).orderBy('blog_id','desc')
+        const blogs = await knex('blogs').select('blog_id','title','description','image_destination','image_filename','publish_date').limit(10).offset(offset*10).orderBy('blog_id','desc')
 
         if(blogs.length == 0){
             return res.status(404).json({
@@ -168,12 +174,32 @@ const fetchBlogs = async(req,res)=>{
                 Message :"No blogs to fetch"
             })
         }
+       
+        for(let i=0;i<blogs.length;i++){
 
-        return res.status(200).json({
+            const image_filename = blogs[i].image_filename
+        const __filename = fileURLToPath(import.meta.url);
+        const __dirname = dirname(__filename);
+         const imagePath = path.join(__dirname,'../../uploads/blogs',image_filename)
+       if(fs.existsSync(imagePath)){
+        const imageBinaryData = fs.readFileSync(imagePath)
+
+        const imageBase64 = Buffer.from(imageBinaryData).toString('base64')
+
+        blogs[i].image =imageBase64
+      
+       }
+
+        }
+       
+        return res.json({
             Error:false,
-            Message :"blogs has been fetch",
+            Message:'Blogs has been fetched',
             Data:blogs
         })
+        // console.log(file)
+
+      
 
     } catch (error) {
         return res.status(404).json({
@@ -194,8 +220,16 @@ const likes = async(req,res)=>{
         }
 
         const {blog_id,like} = req.body
+        const checkblog = await knex('blogs').select('*').where('blog_id',blog_id)
+        if(checkblog.length == 0){
+           return res.json({
+               Error:false,
+               Message:'Blog doesn\'t exist'
+           })
+        }
+
         const oldlikes = await knex('blogs').select('likes').where('blog_id',blog_id)
-        if(oldlikes[0].likes == 0){
+        if(oldlikes[0].likes == 0 && like == -1){
             return res.json({
                 Error:false,
                 Message :"Likes has been updated"
@@ -223,8 +257,57 @@ const likes = async(req,res)=>{
     }
 }
 
+const dislikes = async(req,res)=>{
+    try {
+        const {error} = blogs.dislikes.validate(req.body)
+        if(error){
+            return res.json({
+                Error : true,
+                Message:error.message
+            })
+        }
+
+        const {blog_id,dislike} = req.body
+        const checkblog = await knex('blogs').select('*').where('blog_id',blog_id)
+        if(checkblog.length == 0){
+           return res.json({
+               Error:false,
+               Message:'Blog doesn\'t exist'
+           })
+        }
+
+        const olddislikes = await knex('blogs').select('dislikes').where('blog_id',blog_id)
+        if(olddislikes[0].dislikes == 0 && dislike == -1){
+            return res.json({
+                Error:false,
+                Message :"Dislikes has been updated"
+            })
+        }
+      const disliked = await knex('blogs').update('dislikes',olddislikes[0].dislikes + dislike).where('blog_id',blog_id)
+      
+      if(disliked.length == 0 ){
+        return res.json({
+            Error : true,
+            Message:'No Dislikes'
+        })
+      }
+
+      return res.json({
+        Error:false,
+        Message:'Dislikes has been updated',
+        Dislikes :olddislikes[0].dislikes + dislike
+      })
+    } catch (error) {
+        return res.json({
+            Error:true,
+            Message:error.message
+        })
+    }
+}
+
 export default {
     postBlog,
     fetchBlogs,
     likes,
+    dislikes
 }

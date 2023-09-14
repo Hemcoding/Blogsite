@@ -15,6 +15,14 @@ const postComment = async(req,res)=>{
 
          const {comment , blog_id} = req.body
 
+         const checkblog = await knex('blogs').select('*').where('blog_id',blog_id)
+         if(checkblog.length == 0){
+            return res.json({
+                Error:false,
+                Message:'Blog doesn\'t exist'
+            })
+         }
+
          const token = req.headers.authorization.split(" ")[1]
         // console.log(token)
          const Tokendata = jwt.verify(token, constant.accessToken.secret).data.id
@@ -61,7 +69,7 @@ const postComment = async(req,res)=>{
 
 const getComment = async(req,res)=>{
     try {
-        const {error} =  comments.getComment.validateAsync(req.body)
+        const {error} =  comments.getComment.validate(req.body)
         if(error){
             return res.json({
                 Error:true,
@@ -97,7 +105,6 @@ const getComment = async(req,res)=>{
         })
     }
 }
-
 
 export default {
     postComment,
