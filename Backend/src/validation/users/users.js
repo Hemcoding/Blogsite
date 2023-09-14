@@ -39,9 +39,9 @@ const signUp = Joi.object({
 });
 
 const login = Joi.object({
-  username: Joi.string().min(4).required().messages({
-    "string.empty": `"username" is a required field.`,
-    "string.length": `"username" must be between 4 to 20 character long.`,
+  email: Joi.string().min(4).trim().required().messages({
+    "string.empty": `"email" is a required field.`,
+    "string.length": `"email" must be between 4 to 20 character long.`,
   }),
   password: Joi.string().trim().min(8).max(35).regex(/^(?=.*\d)(?=.*[!@#$%^&*])(?=.*[a-z])(?=.*[A-Z]).{8,35}$/).required().messages({
     "string.empty": `"password" is a required field.`,
@@ -50,4 +50,5 @@ const login = Joi.object({
 })
 export default {
   signUp,
+  login
 };

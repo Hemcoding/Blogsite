@@ -13,6 +13,15 @@ const verifyBlog = Joi.object({
     }), 
 })
 
+const likes = Joi.object({
+    blog_id: Joi.number().min(1).required().messages({
+        'number.empty':`"Blog id" is a required field.`
+    }),
+    like: Joi.number().valid(1,-1).required().messages({
+        "number.empty":`"like" is a required field.`
+    })
+})
 export default {
-    verifyBlog
+    verifyBlog,
+    likes
 }

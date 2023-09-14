@@ -11,11 +11,10 @@ const registerUser = async (req, res) => {
    if(error){
     return res.json({
         Error:true,
-        Message:'this is error'
+        Message:error.message
     })
  }
-    const { username, password, firstname, lastname, email, mobileno, role } =
-      req.body;
+    const { username, password, firstname, lastname, email, mobileno, role } = req.body;
 
     const roles = await knex("roles")
       .select("role_id")
@@ -74,19 +73,26 @@ const registerUser = async (req, res) => {
 
 const userLogin = async (req, res) => {
   try {
-    const { username, email, password } = req.body;
-
-    if(email){
-      const login = await knex("users")
-      .select("user_id", "username", "password")
-      .where("username", username)
-      .orWhere("email", email);
+    const {error} = user.login.validate(req.body)
+    if(error){
+      return res.json({
+        Error:true,
+        Message:error.message
+    })
     }
+    const { email, password } = req.body;
+    console.log(email , password)
+   // let login;
+  //  if(email){
+   const login = await knex("users")
+      .select("user_id", "username", "password")
+      .where("username", email)
+      .orWhere("email", email);
+    //}
+  // else{
    
-    const login = await knex("users")
-    .select("user_id", "username", "password")
-    .where("username", username)
-
+  // }
+  
 
     const auth = await bcrypt.compare(password, login[0].password);
 
