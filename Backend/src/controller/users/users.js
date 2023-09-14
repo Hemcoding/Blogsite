@@ -7,11 +7,11 @@ import jwt from 'jsonwebtoken'
 
 const registerUser = async (req, res) => {
   try {
-   const error = await user.signUp.validateAsync(req.body);
+   const {error} =  user.signUp.validate(req.body);
    if(error){
     return res.json({
         Error:true,
-        Message:error.message
+        Message:'this is error'
     })
  }
     const { username, password, firstname, lastname, email, mobileno, role } =
@@ -56,17 +56,18 @@ const registerUser = async (req, res) => {
       return res.json({
         Error: false,
         Message: "Data has been inserted",
+        Data : insertedRows
       });
     }
 
-    res.json({
+   return res.json({
       Error: true,
       Message: "NO data has been inserted",
     });
   } catch (error) {
     return res.json({
       Error: true,
-      Message: error.message,
+      Message: "aa j chhe",
     });
   }
 };

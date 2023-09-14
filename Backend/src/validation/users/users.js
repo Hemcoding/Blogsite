@@ -35,7 +35,7 @@ const signUp = Joi.object({
     "string.empty": `"password" is a required field.`,
     "string.length": `"password" must contain 8 to 35 characters.`,
   }),
-  role: Joi.string().trim().valid('Author','Reader').required() 
+  role: Joi.string().trim().valid('author','reader').required() 
 });
 
 const login = Joi.object({

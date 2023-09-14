@@ -111,7 +111,35 @@ const fetchBlogs = async(req,res)=>{
     }
 }
 
+const likes = async(req,res)=>{
+    try {
+        
+        const {blog_id,like} = req.body
+        const oldlikes = await knex('blogs').select('likes').where('blog_id',blog_id)
+      const liked = await knex('blogs').update('likes',oldlikes[0].likes + like).where('blog_id',blog_id)
+      
+      if(liked.length == 0 ){
+        return res.json({
+            Error : true,
+            Message:'No likes'
+        })
+      }
+
+      return res.json({
+        Error:false,
+        Message:'Likes has been updated',
+        Likes :oldlikes[0].likes + 1
+      })
+    } catch (error) {
+        return res.json({
+            Error:true,
+            Message:error.message
+        })
+    }
+}
+
 export default {
     postBlog,
-    fetchBlogs
+    fetchBlogs,
+    likes
 }
