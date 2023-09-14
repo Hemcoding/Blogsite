@@ -9,7 +9,6 @@ import path from 'path'
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
 
-
 const tempblog = async(req,res)=>{
     try {
         // blogs.verifyBlog.validateAsync(req.body)
