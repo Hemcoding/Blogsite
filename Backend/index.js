@@ -28,6 +28,10 @@ app.get('/blogs',async(req,res)=>{
     res.render('blogs/postBlog.ejs')
 })
 
+app.get('/gblogs',async(req,res)=>{
+    res.render('blogs/getBlogs.ejs')
+})
+
 app.listen(constant.port,()=>{
     console.log(`Server is running on http://localhost:${constant.port}`)
 })

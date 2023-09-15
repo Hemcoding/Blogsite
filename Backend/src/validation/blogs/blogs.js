@@ -21,6 +21,7 @@ const likes = Joi.object({
     "number.empty": `"like" is a required field.`,
   }),
 });
+
 const dislikes = Joi.object({
   blog_id: Joi.number().min(1).required().messages({
     "number.empty": `"Blog id" is a required field.`,
@@ -29,8 +30,33 @@ const dislikes = Joi.object({
     "number.empty": `"dislike" is a required field.`,
   }),
 });
+
+const fetchBlogsCategory = Joi.object({
+  offset: Joi.number().min(0).required().messages({
+    "number.empty":`"offset" is a required field.`
+  }),
+  category: Joi.string().required().messages({
+    "string.empty":`"category" is a required field.`
+  })
+})
+
+const fetchBlog = Joi.object({
+  offset: Joi.number().min(0).required().messages({
+    "number.empty":`"offset" is a required field.`
+  }),
+})
+
+const deleteBlog = Joi.object({
+  blog_id: Joi.number().min(1).required().messages({
+    "number.empty": `"Blog id" is a required field.`,
+  })
+})
+
 export default {
   verifyBlog,
   likes,
   dislikes,
+  fetchBlogsCategory,
+  fetchBlog,
+  deleteBlog
 };

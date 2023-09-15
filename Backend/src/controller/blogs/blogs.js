@@ -112,7 +112,9 @@ const postBlog = async(req,res)=>{
        // console.log(req.file)
         const token = req.headers.authorization.split(" ")[1]
        // console.log(token)
-        const Tokendata = jwt.verify(token, constant.accessToken.secret).data.id
+       const temp =  jwt.verify(token, constant.accessToken.secret).data
+        const Tokendata = temp.id
+        const Username = temp.username
 
         const checkBlog = await knex('blogs').select('*').where("title" ,'=',title).andWhere("description",'=',description)
 
@@ -124,7 +126,12 @@ const postBlog = async(req,res)=>{
         }
        
         const category_id = await knex('categories').select('category_id').where('name',category)
-
+        if(category_id.length == 0){
+            return res.status(404).json({
+                Error:false,
+                Message:"Category doesn't exsits"
+            })
+        }
         const data ={
             title:title,
             description:description,
@@ -134,7 +141,9 @@ const postBlog = async(req,res)=>{
             likes:0,
             dislikes:0,
             user_id: Tokendata,
+            username:Username,
             category_id:category_id[0].category_id,
+            category:category,
             status:'YES'
         }
        
@@ -164,19 +173,27 @@ const postBlog = async(req,res)=>{
 
 const fetchBlogs = async(req,res)=>{
     try {
-        const {offset} = req.body
-        const blogs = await knex('blogs').select('blog_id','title','description','image_destination','image_filename','publish_date').limit(10).offset(offset*10).orderBy('blog_id','desc')
+        const {error} = blogs.fetchBlog.validate(req.body)
+        if(error){
+            return res.json({
+                Error : true,
+                Message:error.message
+            })
+        }
 
-        if(blogs.length == 0){
+        const {offset} = req.body
+        const blogs2 = await knex('blogs').select('blog_id','title','description','image_destination','image_filename','publish_date','category').limit(10).offset(offset*10).orderBy('blog_id','desc')
+
+        if(blogs2.length == 0){
             return res.status(404).json({
                 Error :true,
                 Message :"No blogs to fetch"
             })
         }
        
-        for(let i=0;i<blogs.length;i++){
+        for(let i=0;i<blogs2.length;i++){
 
-            const image_filename = blogs[i].image_filename
+            const image_filename = blogs2[i].image_filename
         const __filename = fileURLToPath(import.meta.url);
         const __dirname = dirname(__filename);
          const imagePath = path.join(__dirname,'../../uploads/blogs',image_filename)
@@ -185,7 +202,7 @@ const fetchBlogs = async(req,res)=>{
 
         const imageBase64 = Buffer.from(imageBinaryData).toString('base64')
 
-        blogs[i].image =imageBase64
+        blogs2[i].image =imageBase64
       
        }
 
@@ -194,11 +211,66 @@ const fetchBlogs = async(req,res)=>{
         return res.json({
             Error:false,
             Message:'Blogs has been fetched',
-            Data:blogs
+            Data:blogs2
         })
         // console.log(file)
 
       
+
+    } catch (error) {
+        return res.status(404).json({
+            Error:true,
+            Message:error.message
+        })
+    }
+}
+
+const fetchBlogsCategory = async(req,res)=>{
+    try {
+        
+        const {error} = blogs.fetchBlogsCategory.validate(req.body)
+        if(error){
+            return res.json({
+                Error : true,
+                Message:error.message
+            })
+        }
+
+        const {offset,category} = req.body
+        const category_id2 = await knex('categories').select('category_id').where('name',category)
+        const category_id = category_id2[0].category_id
+        const blogs2 = await knex('blogs').select('blog_id','title','description','image_destination','image_filename','publish_date','likes','dislikes','user_id').where('category_id',category_id).limit(10).offset(offset*10).orderBy('blog_id','desc')
+
+        if(blogs2.length == 0){
+            return res.status(404).json({
+                Error :true,
+                Message :"No blogs to fetch"
+            })
+        }
+       
+        for(let i=0;i<blogs2.length;i++){
+
+            const image_filename = blogs2[i].image_filename
+        const __filename = fileURLToPath(import.meta.url);
+        const __dirname = dirname(__filename);
+         const imagePath = path.join(__dirname,'../../uploads/blogs',image_filename)
+       if(fs.existsSync(imagePath)){
+        const imageBinaryData = fs.readFileSync(imagePath)
+
+        const imageBase64 = Buffer.from(imageBinaryData).toString('base64')
+
+        blogs2[i].image =imageBase64
+      
+       }
+
+        }
+       
+        return res.json({
+            Error:false,
+            Message:'Blogs has been fetched',
+            Data:blogs2
+        })
+        // console.log(file)
 
     } catch (error) {
         return res.status(404).json({
@@ -304,9 +376,83 @@ const dislikes = async(req,res)=>{
     }
 }
 
+const deleteBlog = async(req,res)=>{
+   try {
+    const {error} = blogs.deleteBlog.validate(req.body)
+    if(error){
+        return res.json({
+            Error : true,
+            Message:error.message
+        })
+    }
+     const {blog_id} = req.body
+
+     const token = req.headers.authorization.split(" ")[1]
+
+     // console.log(token)
+
+     const temp =  jwt.verify(token, constant.accessToken.secret).data
+
+      const Tokendata = temp.id
+
+      const Username = temp.username
+
+     const blogs2 = await knex('blogs').select('blog_id','image_destination','image_filename').where('blog_id',blog_id).andWhere('user_id',Tokendata).andWhere('username',Username)
+        if(blogs2.length == 0){
+            return res.json({
+                Error:false,
+                Message:"blog doesn't exsits "
+            }) 
+        }
+
+     const deletedBlogs = await knex('blogs').delete().where('blog_id',blog_id)
+     if(deletedBlogs == 0){
+        return res.json({
+            Error:false,
+            Message:"failed to delete blog "
+        })
+     }
+
+     const deleteComments = await knex('comments').delete().where('blog_id',blog_id)
+
+     const filepath = blogs2[0].image_destination +'/' + blogs2[0].image_filename
+     if (fs.existsSync(filepath)) {
+        // File exists, delete it
+        console.log(filepath)
+        fs.unlink(filepath, (err) => {
+          if (err) {
+            // Handle the error (e.g., log or respond with an error message)
+            console.error('Error deleting file:', err);
+          } else {
+            // File has been successfully deleted
+            console.log('File deleted successfully');
+          }
+        });
+      }
+
+     return res.json({
+        Error:false,
+        Message:'Blog and comments are deleted',
+        Data :{
+            Deleted_Blogs:deletedBlogs,
+            Deleted_comments:deleteComments
+        }
+     })
+
+
+   } catch (error) {
+    return res.json({
+        Error:true,
+        Message:error.message
+    })
+   } 
+}
+
 export default {
     postBlog,
     fetchBlogs,
     likes,
-    dislikes
+    dislikes,
+    fetchBlogsCategory,
+    deleteBlog
 }

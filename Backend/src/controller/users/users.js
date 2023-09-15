@@ -81,11 +81,11 @@ const userLogin = async (req, res) => {
     })
     }
     const { email, password } = req.body;
-    console.log(email , password)
+   // console.log(email , password)
    // let login;
   //  if(email){
    const login = await knex("users")
-      .select("user_id", "username", "password")
+      .select("user_id", "username", "password","first_name","last_name","mobile_no")
       .where("username", email)
       .orWhere("email", email);
     //}
@@ -93,7 +93,6 @@ const userLogin = async (req, res) => {
    
   // }
   
-
     const auth = await bcrypt.compare(password, login[0].password);
 
     if (auth != true) {
@@ -123,10 +122,19 @@ const userLogin = async (req, res) => {
       constant.refreshToken.secret
     );
 
+    const response = {
+      id:login[0].user_id,
+      username:login[0].username,
+      first_name:login[0].first_name,
+      last_name:login[0].last_name,
+      mobile_no:login[0].mobile_no,
+      email:email
+    }
+
     res.json({
       Error:false,
       Message:"Login successfull",
-      Data:data,
+      Data:response,
       AccessToken :access,
       RefreshToken:refresh
     })

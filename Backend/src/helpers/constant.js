@@ -11,12 +11,12 @@ const dbconfig = {
 };
 
 const accessToken = {
-  exp: 1 * 600,
+  exp: 1 * 60000,
   secret: "02c79048bc7e055385655953f5aa6e109ee92ebd15f683ca7fd9cfc6fed5985b",
 };
 
 const refreshToken = {
-  exp: 1 * 900,
+  exp: 1 * 90000,
   secret: "731e4b0af71aa1583d6dbf369171dbb729a6488da346ed17d63a6984a904971a",
 };
 

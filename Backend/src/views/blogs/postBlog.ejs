@@ -8,7 +8,7 @@
     
 </head>
 <body>
-    <form id="blogForm" method="post" enctype="multipart/form-data" >
+    <form id="blogForm" method="post" enctype="multipart/form-data">
         <label>Title :</label>
         <input type="text" id="title" name="title" required><br><br>
 
@@ -29,7 +29,7 @@
         <script>
             function populateCategoryDropdown() {
         // Replace 'https://your-api-endpoint.com/categories' with your API endpoint
-        axios.get('http://localhost:8000/categories/showCategories')
+        axios.post('http://localhost:8000/categories/showCategories')
         .then(function (response) {
             const categoryDropdown = document.getElementById('category');
             const categories = response.data.Data;
