@@ -258,6 +258,42 @@ const getProfile = async(req,res)=>{
   }
 }
 
+const deleteUser = async(req,res)=>{
+  try {
+    const token = req.headers.authorization.split(" ")[1]
+    // console.log(token)
+   const temp =  jwt.verify(token, constant.accessToken.secret).data
+   const Tokendata = temp.id
+   const Username = temp.username
+
+   const checkUser = await knex('users').select('username','user_id').where('user_id',Tokendata).andWhere('username',Username)
+
+   if(checkUser.length == 0){
+      return res.json({
+        Error:true,
+        Message:"User doesn't exists"
+      })
+   }
+
+   const deleteUser = await knex('users').delete().where('user_id',Tokendata).andWhere('username',Username)
+
+   if(deleteUser == 0){
+    return res.json({
+      Error:true,
+      Message:"User doesn't exists"
+    })
+   }
+
+   
+
+  } catch (error) {
+    return res.json({
+      Error: true,
+      Message: error.message,
+    });
+  }
+}
+
 export default {
   registerUser,
   userLogin,
