@@ -1,7 +1,5 @@
 import knex from '../../config/dbconfig.js'
-import blog from '../../middleware/blogs/blogs.js'
 import constant from '../../helpers/constant.js'
-import formidable from 'formidable'
 import jwt from 'jsonwebtoken'
 import blogs from '../../validation/blogs/blogs.js'
 import fs from 'fs'
@@ -9,6 +7,10 @@ import path from 'path'
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
 
+import formidable from 'formidable'
+import blog from '../../middleware/blogs/blogs.js'
+
+/*
 const tempblog = async(req,res)=>{
     try {
         // blogs.verifyBlog.validateAsync(req.body)
@@ -89,6 +91,7 @@ const tempblog = async(req,res)=>{
         }) 
     }
 }
+*/
 
 const postBlog = async(req,res)=>{
     try {
