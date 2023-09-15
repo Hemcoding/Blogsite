@@ -4,6 +4,10 @@ import checkUsername from "./username.js";
 import bcrypt from "bcrypt";
 import constant from "../../helpers/constant.js";
 import jwt from 'jsonwebtoken'
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
+import path from 'path'
+import fs from 'fs'
 
 const registerUser = async (req, res) => {
   try {
@@ -45,6 +49,8 @@ const registerUser = async (req, res) => {
       last_name: lastname.charAt(0).toUpperCase() + lastname.slice(1).trim(),
       email: email,
       mobile_no: mobileno,
+      profile_destination:" ",
+      profile_filename:" ",
       status: "NO",
       role_id: roles[0].role_id,
     };
@@ -85,7 +91,7 @@ const userLogin = async (req, res) => {
    // let login;
   //  if(email){
    const login = await knex("users")
-      .select("user_id", "username", "password","first_name","last_name","mobile_no")
+      .select("user_id", "username", "password","first_name","last_name","mobile_no","profile_destination","profile_filename")
       .where("username", email)
       .orWhere("email", email);
     //}
@@ -101,6 +107,21 @@ const userLogin = async (req, res) => {
         Message: "Invalid credentials",
       });
     }
+
+    const image_filename = login[0].profile_filename
+    const __filename = fileURLToPath(import.meta.url);
+    const __dirname = dirname(__filename);
+    const imagePath = path.join(__dirname,'../../uploads/users',image_filename)
+
+    if(fs.existsSync(imagePath)){
+      const imageBinaryData = fs.readFileSync(imagePath)
+
+      const imageBase64 = Buffer.from(imageBinaryData).toString('base64')
+
+      login[0].image =imageBase64
+    
+     }
+
 
     const data = {
       id:login[0].user_id,
@@ -128,7 +149,8 @@ const userLogin = async (req, res) => {
       first_name:login[0].first_name,
       last_name:login[0].last_name,
       mobile_no:login[0].mobile_no,
-      email:email
+      email:email,
+      image:login[0].image
     }
 
     res.json({
@@ -147,7 +169,98 @@ const userLogin = async (req, res) => {
   }
 };
 
+const imageUpload = async(req,res)=>{
+  try {
+    if(!req.file){
+      return res.json({
+          Error:true,
+          Message:"Please upload the file"
+      })
+  }
+
+  const {destination , filename} = req.file
+  const token = req.headers.authorization.split(" ")[1]
+  // console.log(token)
+  const temp =  jwt.verify(token, constant.accessToken.secret).data
+   const Tokendata = temp.id
+   const Username = temp.username
+
+   const getUser = await knex('users').select('user_id','username').where('user_id',Tokendata).andWhere('username',Username)
+    if(getUser.length ==  0){
+      return res.json({
+        Error:true,
+        Message:"no user found"
+    })
+    }
+
+    const data = {
+      profile_destination:destination,
+      profile_filename:filename
+    }
+
+    const updatedColumn = await knex('users').update(data).where('user_id',Tokendata).andWhere('username',Username)
+
+    if(updatedColumn == 0){
+      return res.json({
+        Error:true,
+        Message:"failed to upload profile photo"
+      })
+    }
+
+    return res.json({
+      Error:false,
+      Message:"Profile pic has been uploaded"
+    })
+
+  } catch (error) {
+    return res.json({
+      Error: true,
+      Message: error.message,
+    });
+  }
+}
+
+const getProfile = async(req,res)=>{
+  try {
+    const token = req.headers.authorization.split(" ")[1]
+  // console.log(token)
+  const temp =  jwt.verify(token, constant.accessToken.secret).data
+   const Tokendata = temp.id
+   const Username = temp.username
+
+   const getImageinfo = await knex('users').select('profile_destination','profile_filename').where('username',Username).andWhere('user_id',Tokendata)
+   
+        const image_filename = getImageinfo[0].profile_filename
+        const __filename = fileURLToPath(import.meta.url);
+        const __dirname = dirname(__filename);
+        const imagePath = path.join(__dirname,'../../uploads/users',image_filename)
+
+         if(fs.existsSync(imagePath)){
+          const imageBinaryData = fs.readFileSync(imagePath)
+  
+          const imageBase64 = Buffer.from(imageBinaryData).toString('base64')
+  
+          getImageinfo[0].image =imageBase64
+        
+         }
+
+         return res.json({
+          Error:false,
+          Message:"Image has been fetched",
+          image:getImageinfo[0].image
+         })
+
+  } catch (error) {
+    return res.json({
+      Error: true,
+      Message: error.message,
+    });
+  }
+}
+
 export default {
   registerUser,
-  userLogin
+  userLogin,
+  imageUpload,
+  getProfile
 };

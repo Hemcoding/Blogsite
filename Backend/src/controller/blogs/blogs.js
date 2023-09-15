@@ -193,7 +193,7 @@ const fetchBlogs = async(req,res)=>{
        
         for(let i=0;i<blogs2.length;i++){
 
-            const image_filename = blogs2[i].image_filename
+        const image_filename = blogs2[i].image_filename
         const __filename = fileURLToPath(import.meta.url);
         const __dirname = dirname(__filename);
          const imagePath = path.join(__dirname,'../../uploads/blogs',image_filename)
