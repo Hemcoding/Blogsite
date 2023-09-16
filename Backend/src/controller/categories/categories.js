@@ -2,7 +2,7 @@ import knex from '../../config/dbconfig.js'
 import categories from '../../validation/categories/categories.js'
 import category from '../../middleware/categories/categories.js'
 
-const addCategory = async(req,res)=>{
+const addCategory = async(req,res)=>{m 
     try {
      const {error} = await categories.verifyCategory.validateAsync(req.body)
         if(error){

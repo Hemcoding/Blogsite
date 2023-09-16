@@ -48,7 +48,24 @@ const login = Joi.object({
     "string.length": `"password" must contain 8 to 35 characters.`,
   })
 })
+
+const passwordResetEmail = Joi.object({
+  email: Joi.string().min(8).max(255).email().trim().required().messages({
+    "string.empty": `"email" is a required field.`,
+    "email.base": `enter valid "email"`,
+  })
+})
+
+const passwordReset = Joi.object({
+  token:Joi.string().required(),
+  newPassword: Joi.string().trim().min(8).max(35).regex(/^(?=.*\d)(?=.*[!@#$%^&*])(?=.*[a-z])(?=.*[A-Z]).{8,35}$/).required().messages({
+    "string.empty": `"password" is a required field.`,
+    "string.length": `"password" must contain 8 to 35 characters.`,
+  })
+})
 export default {
   signUp,
-  login
+  login,
+  passwordResetEmail,
+  passwordReset
 };

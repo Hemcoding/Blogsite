@@ -58,13 +58,13 @@
         e.preventDefault(); // Prevent the default form submission
     
         const form = e.target;
-        const formData = new FormData(form); // Create a FormData object to store form data
-        const title = document.getElementById('title')
-        const description = document.getElementById('description')
-        const category = document.getElementById('category')
+       const formData = new FormData(form); // Create a FormData object to store form data
+      //  const title = document.getElementById('title')
+       // const description = document.getElementById('description')
+       // const category = document.getElementById('category')
     
         const Headers = {
-            "authorization":"b eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjp7ImlkIjoxLCJ1c2VybmFtZSI6InJhaHVsIn0sImV4cCI6MTY5NDUyMTM2NywiaWF0IjoxNjk0NTIwNzY3fQ.Pd9uS3CDL4A-RlmuJKahi8SZtaiQp9n5pplDhf3w2rc"
+            "authorization":"b eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjp7ImlkIjo3LCJ1c2VybmFtZSI6ImRocnV2In0sImV4cCI6MTY5NDg5ODM0NSwiaWF0IjoxNjk0ODM4MzQ1fQ.6VUZqZqIG6CPb77rHOizvHZUgbrjgCV93rOFtSuh_Wk"
         }
         // Make a POST request using Axios
         axios.post('http://localhost:8000/blogs/postBlog' ,formData,{headers:Headers})

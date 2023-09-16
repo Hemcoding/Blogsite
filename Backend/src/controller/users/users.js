@@ -3,6 +3,7 @@ import user from "../../validation/users/users.js";
 import checkUsername from "./username.js";
 import bcrypt from "bcrypt";
 import constant from "../../helpers/constant.js";
+import users from "../../middleware/users/users.js";
 import jwt from 'jsonwebtoken'
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
@@ -185,12 +186,29 @@ const imageUpload = async(req,res)=>{
    const Tokendata = temp.id
    const Username = temp.username
 
-   const getUser = await knex('users').select('user_id','username').where('user_id',Tokendata).andWhere('username',Username)
+   const getUser = await knex('users').select('user_id','username','profile_destination','profile_filename').where('user_id',Tokendata).andWhere('username',Username)
     if(getUser.length ==  0){
       return res.json({
         Error:true,
         Message:"no user found"
     })
+    }
+
+    if(getUser[0].profile_destination && getUser[0].profile_filename){
+      const filepath = getUser[0].profile_destination + '/' + getUser[0].profile_filename
+      if (fs.existsSync(filepath)) {
+       // File exists, delete it
+      // console.log(filepath)
+       fs.unlink(filepath, (err) => {
+         if (err) {
+           // Handle the error (e.g., log or respond with an error message)
+           console.error('Error deleting file:', err);
+         } else {
+           // File has been successfully deleted
+           console.log('File deleted successfully');
+         }
+       });
+     }
     }
 
     const data = {
@@ -266,7 +284,7 @@ const deleteUser = async(req,res)=>{
    const Tokendata = temp.id
    const Username = temp.username
 
-   const checkUser = await knex('users').select('username','user_id').where('user_id',Tokendata).andWhere('username',Username)
+   const checkUser = await knex('users').select('username','user_id','profile_destination','profile_filename').where('user_id',Tokendata).andWhere('username',Username)
 
    if(checkUser.length == 0){
       return res.json({
@@ -284,7 +302,107 @@ const deleteUser = async(req,res)=>{
     })
    }
 
-   
+   const filepath = checkUser[0].profile_destination + '/' + checkUser[0].profile_filename
+   if (fs.existsSync(filepath)) {
+    // File exists, delete it
+    console.log(filepath)
+    fs.unlink(filepath, (err) => {
+      if (err) {
+        // Handle the error (e.g., log or respond with an error message)
+        console.error('Error deleting file:', err);
+      } else {
+        // File has been successfully deleted
+        console.log('File deleted successfully');
+      }
+    });
+  }
+  
+  } catch (error) {
+    return res.json({
+      Error: true,
+      Message: error.message,
+    });
+  }
+}
+
+const resetPasswordEmail = async(req,res)=>{
+  try {
+    const {error} = user.passwordResetEmail.validate(req.body)
+    if(error){
+      return res.json({
+          Error:true,
+          Message:error.message
+      })
+   }
+
+   const {email} = req.body
+
+   const findUser = await knex('users').select('user_id','email').where('email',email)
+   if(findUser.length == 0){
+      return res.status(404).json({
+        Error:true,
+        Message:'User not found'
+      })
+   }
+
+   const data = {
+    id:findUser[0].user_id
+   }
+
+   const resetToken = jwt.sign(data,constant.resetToken, { expiresIn: '1h' })
+
+   users.sendPasswordResetEmail(email,resetToken)
+
+   res.json({
+    Error:false,
+    Message:"Reset password email is sent"
+   })
+
+  } catch (error) {
+    return res.json({
+      Error: true,
+      Message: error.message,
+    });
+  }
+}
+
+const resetPassword = async(req,res)=>{
+  try {
+    const {error} = user.passwordReset.validate(req.body)
+    if(error){
+      return res.json({
+          Error:true,
+          Message:error.message
+      })
+   }
+
+   const {token , newPassword} = req.body
+
+   const decodedToken = jwt.verify(token , constant.resetToken)
+   const getUser = await knex('users').select('user_id').where('user_id',decodedToken.id)
+   if(getUser.length == 0){
+    return res.status(404).json({
+      Error:true,
+      Message:'User not found'
+    })
+   }
+
+   let hashed;
+    await bcrypt.hash(newPassword, constant.saltRounds).then(async (result) => {
+      hashed = result;
+    });
+
+    const data = {
+      password:hashed
+    }
+
+   const updatePassword = await knex('users').update(data).where('user_id',decodedToken.id)
+
+   return res.json({
+    Error:false,
+    Message :"Password updated successfully",
+    data:updatePassword
+   })
 
   } catch (error) {
     return res.json({
@@ -298,5 +416,8 @@ export default {
   registerUser,
   userLogin,
   imageUpload,
-  getProfile
+  getProfile,
+  deleteUser,
+  resetPasswordEmail,
+  resetPassword
 };

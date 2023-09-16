@@ -28,8 +28,13 @@ app.get('/blogs',async(req,res)=>{
     res.render('blogs/postBlog.ejs')
 })
 
-app.get('/gblogs',async(req,res)=>{
-    res.render('blogs/getBlogs.ejs')
+app.get('/profile',async(req,res)=>{
+    res.render('users/getProfile.ejs')
+})
+
+app.get('/resetPassword',async(req,res)=>{
+    const token = req.query.token;
+    res.render('users/resetPassword.ejs',{token})
 })
 
 app.listen(constant.port,()=>{
