@@ -114,7 +114,7 @@ const postBlog = async(req,res)=>{
         const {destination , filename} = req.file
       // console.log(category)
         const token = req.headers.authorization.split(" ")[1]
-      //  console.log(token)
+        console.log(token)
        const temp =  jwt.verify(token, constant.accessToken.secret).data
         const Tokendata = temp.id
         const Username = temp.username

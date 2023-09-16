@@ -14,7 +14,7 @@ const registerUser = async (req, res) => {
   try {
    const {error} =  user.signUp.validate(req.body);
    if(error){
-    return res.json({
+    return res.staus(400).json({
         Error:true,
         Message:error.message
     })
@@ -26,13 +26,13 @@ const registerUser = async (req, res) => {
       .where("name", "=", role);
 
     if (!roles) {
-      return res.json({
+      return res.status(400).json({
         Error: true,
         Message: "Please provide proper role",
       });
     }
     if ( await checkUsername(username, email) == "Username or Email Unavailable" ) {
-      return res.json({
+      return res.status(409).json({
         Error: true,
         Message: "Username or email already exsits",
       });
@@ -59,30 +59,31 @@ const registerUser = async (req, res) => {
     const insertedRows = await knex("users").insert(data);
 
     if (insertedRows.length >= 1) {
-      return res.json({
+      return res.status(201).json({
         Error: false,
         Message: "Data has been inserted",
         Data : insertedRows
       });
     }
 
-   return res.json({
+   return res.status(409).json({
       Error: true,
       Message: "NO data has been inserted",
     });
   } catch (error) {
-    return res.json({
+    
+    return res.status(500).json({
       Error: true,
-      Message: "aa j chhe",
+      Message: error.message,
     });
   }
-};
+};//status codes done ..!!
 
 const userLogin = async (req, res) => {
   try {
     const {error} = user.login.validate(req.body)
     if(error){
-      return res.json({
+      return res.status(400).json({
         Error:true,
         Message:error.message
     })
@@ -103,7 +104,7 @@ const userLogin = async (req, res) => {
     const auth = await bcrypt.compare(password, login[0].password);
 
     if (auth != true) {
-      return res.json({
+      return res.status(401).json({
         Error: false,
         Message: "Invalid credentials",
       });
@@ -154,7 +155,7 @@ const userLogin = async (req, res) => {
       image:login[0].image
     }
 
-    res.json({
+    res.status(200).json({
       Error:false,
       Message:"Login successfull",
       Data:response,
@@ -163,17 +164,17 @@ const userLogin = async (req, res) => {
     })
 
   } catch (error) {
-    return res.json({
+    return res.status(500).json({
       Error: true,
       Message: error.message,
     });
   }
-};
+};//status codes done ..!!
 
 const imageUpload = async(req,res)=>{
   try {
     if(!req.file){
-      return res.json({
+      return res.status(404).json({
           Error:true,
           Message:"Please upload the file"
       })
@@ -188,7 +189,7 @@ const imageUpload = async(req,res)=>{
 
    const getUser = await knex('users').select('user_id','username','profile_destination','profile_filename').where('user_id',Tokendata).andWhere('username',Username)
     if(getUser.length ==  0){
-      return res.json({
+      return res.status(404).json({
         Error:true,
         Message:"no user found"
     })
@@ -219,24 +220,30 @@ const imageUpload = async(req,res)=>{
     const updatedColumn = await knex('users').update(data).where('user_id',Tokendata).andWhere('username',Username)
 
     if(updatedColumn == 0){
-      return res.json({
+      return res.status(409).json({
         Error:true,
         Message:"failed to upload profile photo"
       })
     }
 
-    return res.json({
+    return res.status(200).json({
       Error:false,
       Message:"Profile pic has been uploaded"
     })
 
   } catch (error) {
-    return res.json({
+    if(error.name === 'JsonWebTokenError'){
+      return res.status(401).json({
+        Error: true,
+        Message: error.message,
+      })
+    }
+    return res.status(500).json({
       Error: true,
       Message: error.message,
     });
   }
-}
+}//status codes done ..!!
 
 const getProfile = async(req,res)=>{
   try {
@@ -247,7 +254,12 @@ const getProfile = async(req,res)=>{
    const Username = temp.username
 
    const getImageinfo = await knex('users').select('profile_destination','profile_filename').where('username',Username).andWhere('user_id',Tokendata)
-   
+   if(getImageinfo.length == 0){
+      return res.status(404).json({
+        Error : true,
+        Message :'No data found'
+      })
+   }
         const image_filename = getImageinfo[0].profile_filename
         const __filename = fileURLToPath(import.meta.url);
         const __dirname = dirname(__filename);
@@ -262,19 +274,25 @@ const getProfile = async(req,res)=>{
         
          }
 
-         return res.json({
+         return res.status(200).json({
           Error:false,
           Message:"Image has been fetched",
           image:getImageinfo[0].image
          })
 
   } catch (error) {
-    return res.json({
+    if(error.name === 'JsonWebTokenError'){
+      return res.status(401).json({
+        Error: true,
+        Message: error.message,
+      })
+    }
+    return res.status(500).json({
       Error: true,
       Message: error.message,
     });
   }
-}
+}//status codes done ..!!
 
 const deleteUser = async(req,res)=>{
   try {
@@ -287,7 +305,7 @@ const deleteUser = async(req,res)=>{
    const checkUser = await knex('users').select('username','user_id','profile_destination','profile_filename').where('user_id',Tokendata).andWhere('username',Username)
 
    if(checkUser.length == 0){
-      return res.json({
+      return res.status(404).json({
         Error:true,
         Message:"User doesn't exists"
       })
@@ -296,7 +314,7 @@ const deleteUser = async(req,res)=>{
    const deleteUser = await knex('users').delete().where('user_id',Tokendata).andWhere('username',Username)
 
    if(deleteUser == 0){
-    return res.json({
+    return res.status(404).json({
       Error:true,
       Message:"User doesn't exists"
     })
@@ -318,7 +336,13 @@ const deleteUser = async(req,res)=>{
   }
   
   } catch (error) {
-    return res.json({
+    if(error.name === 'JsonWebTokenError'){
+      return res.status(401).json({
+        Error: true,
+        Message: error.message,
+      })
+    }
+    return res.status(500).json({
       Error: true,
       Message: error.message,
     });
@@ -329,7 +353,7 @@ const resetPasswordEmail = async(req,res)=>{
   try {
     const {error} = user.passwordResetEmail.validate(req.body)
     if(error){
-      return res.json({
+      return res.status(400).json({
           Error:true,
           Message:error.message
       })
@@ -359,7 +383,7 @@ const resetPasswordEmail = async(req,res)=>{
    })
 
   } catch (error) {
-    return res.json({
+    return res.status(500).json({
       Error: true,
       Message: error.message,
     });
@@ -370,7 +394,7 @@ const resetPassword = async(req,res)=>{
   try {
     const {error} = user.passwordReset.validate(req.body)
     if(error){
-      return res.json({
+      return res.status(400).json({
           Error:true,
           Message:error.message
       })
@@ -398,7 +422,7 @@ const resetPassword = async(req,res)=>{
 
    const updatePassword = await knex('users').update(data).where('user_id',decodedToken.id)
 
-   return res.json({
+   return res.status(200).json({
     Error:false,
     Message :"Password updated successfully",
     data:updatePassword
