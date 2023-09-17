@@ -1,10 +1,12 @@
 import React, { useRef, useState } from "react";
 import "./Navbar.scss";
-// import toggle from "../userprofile/Userprofile"
-import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from "reactstrap";
+import { Button, Modal, ModalHeader, ModalBody, ModalFooter, DropdownMenu, DropdownItem } from "reactstrap";
+import { useSelector } from "react-redux";
 
 const NavBar = () => {
   const [modal, setModal] = useState(false);
+
+  const user = useSelector((state) => state.user);
 
   const toggle = () => setModal(!modal);
   const inputRef = useRef(null);
@@ -19,6 +21,8 @@ const NavBar = () => {
       return;
     }
   }
+
+
 
   // event.target.value=null
 
@@ -62,7 +66,7 @@ const NavBar = () => {
             </ul>
           </div>
           <div className="user-profile">
-            <p>Hemanshu Parmar</p>
+            <p>{user}</p>
             <img
               onClick={toggle}
               className="user-img"
@@ -71,7 +75,33 @@ const NavBar = () => {
           </div>
         </div>
       </nav>
-      <Modal isOpen={modal} toggle={toggle} fullscreen>
+      <DropdownMenu dark toggle={toggle}>
+    <DropdownItem header>
+      Header
+    </DropdownItem>
+    <DropdownItem>
+      Some Action
+    </DropdownItem>
+    <DropdownItem text>
+      Dropdown Item Text
+    </DropdownItem>
+    <DropdownItem disabled>
+      Action (disabled)
+    </DropdownItem>
+    <DropdownItem divider />
+    <DropdownItem>
+      Foo Action
+    </DropdownItem>
+    <DropdownItem>
+      Bar Action
+    </DropdownItem>
+    <DropdownItem>
+      Quo Action
+    </DropdownItem>
+  </DropdownMenu>
+
+
+      <Modal isOpen={modal}  fullscreen>
         <ModalHeader toggle={toggle}>Your Profile</ModalHeader>
         <ModalBody>
           <div className="user-details-container">

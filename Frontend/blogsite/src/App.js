@@ -1,9 +1,11 @@
 import Role from "./Component/Role/Role.js";
-import Login from "./Component/Author/login/login.js"
-import Signup from "./Component/Author/signup/signup.js"
+import Login from "./Component/User/login/Login.js"
+// import AuthSignup from "./Component/Author/signup/signup.js"
+import Signup from "./Component/User/signup/signup.js";
 import Userhome from "./Component/User/home/Userhome.js";
 import Auth from "./Component/auth/Author.js"
 import {Route, Routes} from  "react-router-dom"
+
 import './App.css';
 
 function App() {
@@ -11,13 +13,15 @@ function App() {
     <Routes>
       <Route path="/" element={<Role/>}/>
       
-        <Route path="author/login" element={<Login/>}/>
-        <Route path="author/signup" element={<Signup/>}/>
+        
+        <Route path="/reader/login" element={<Login role="reader"/>}/>
+        <Route path="/reader/signup" element={<Signup role="reader"/>}/>
 
-        <Route path="/user/login" element={<Login/>}/>
-        <Route path="/user/signup" element={<Signup/>}/>
-        <Route path="/user/home" element={<Userhome/>}/>
-        <Route path="/author/auth" element={<Auth/>}/>
+        <Route path="author/login" element={<Login role="author"/>}/>
+        <Route path="author/signup" element={<Signup role="author"/>}/>
+
+        <Route path="/reader/home" element={<Userhome/>}/>
+        <Route path="/author/home" element={<Auth/>}/>
       
     </Routes>
    

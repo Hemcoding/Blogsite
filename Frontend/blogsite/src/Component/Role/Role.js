@@ -18,7 +18,7 @@ function Role() {
           </Link>
           </Row>
           <Row>
-          <Link to="/user/login">
+          <Link to="/reader/login">
           <Button className='w-100'>
             As a User
           </Button>
