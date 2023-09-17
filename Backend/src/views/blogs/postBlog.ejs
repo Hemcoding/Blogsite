@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>POST BLOG</title>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    
+</head>
+<body>
+    <form id="blogForm" method="post" enctype="multipart/form-data">
+        <label>Title :</label>
+        <input type="text" id="title" name="title" required><br><br>
+
+        <label>Description :</label>
+        <textarea id="description" name="description" rows="4" required></textarea><br><br>
+
+        <label for="image">Upload Image:</label>
+        <input type="file" id="image" name="image" accept=".jpg, .jpeg, .png" required><br><br>
+
+        <label for="category">Category:</label>
+        <select id="category" name="category" required>
+            <option value="" disabled selected>Select a category</option>
+        </select><br><br>
+
+        <input type="submit" value="Create Post">
+    </form>
+    <div>
+        <script>
+            function populateCategoryDropdown() {
+        // Replace 'https://your-api-endpoint.com/categories' with your API endpoint
+        axios.post('http://localhost:8000/categories/showCategories')
+        .then(function (response) {
+            const categoryDropdown = document.getElementById('category');
+            const categories = response.data.Data;
+            
+            // Iterate through the categories and add options to the dropdown
+            categories.forEach(function (category) {
+                const option = document.createElement('option');
+                option.value = category.name; // Set the value (you can adjust this)
+                option.textContent = category.name; // Set the display text
+                categoryDropdown.appendChild(option);
+            });
+        })
+        .catch(function (error) {
+            // Handle any errors that occurred during the request
+            console.error('Error:', error);
+        });
+    }
+    
+    // Call the function to populate the category dropdown when the page loads
+    window.addEventListener('load', populateCategoryDropdown);
+    
+    // Handle form submission
+  const el = document.getElementById('blogForm')
+  if(el){
+    el.addEventListener('submit', function (e) {
+        e.preventDefault(); // Prevent the default form submission
+    
+        const form = e.target;
+        const formData = new FormData(form); // Create a FormData object to store form data
+    
+        const Headers = {
+            "authorization":"b eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjp7ImlkIjo3LCJ1c2VybmFtZSI6ImRocnV2In0sImV4cCI6MTY5NDg5ODM0NSwiaWF0IjoxNjk0ODM4MzQ1fQ.6VUZqZqIG6CPb77rHOizvHZUgbrjgCV93rOFtSuh_Wk"
+        }
+        // Make a POST request using Axios
+        axios.post('http://localhost:8000/blogs/postBlog' ,formData,{headers:Headers})
+        .then(function (response) {
+            // Handle the successful response from the API
+        
+            console.log(response)
+            form.reset(); // Reset the form after successful submission
+        })
+        .catch(function (error) {
+            // Handle any errors that occurred during the request
+          
+        });
+    });
+  
+  }
+        </script>
+      
+    </div>
+</body>
+</html> 
