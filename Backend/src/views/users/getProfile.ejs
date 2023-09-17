@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Get Image</title>
+</head>
+<body>
+    <img id="imageElement" src="" alt="Image" style="max-width: 100%;" />
+
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script>
+      // Function to fetch JSON data and image using Axios
+      async function fetchImageData() {
+        try {
+          const Headers = {
+            "authorization":"b eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjp7ImlkIjo3LCJ1c2VybmFtZSI6ImRocnV2In0sImV4cCI6MTY5NDg5ODM0NSwiaWF0IjoxNjk0ODM4MzQ1fQ.6VUZqZqIG6CPb77rHOizvHZUgbrjgCV93rOFtSuh_Wk"
+        }
+          const response = await axios.post('http://localhost:8000/users/getProfile',{},{headers:Headers })
+          console.log(response)
+          if (response) {
+          // Set the src attribute of the <img> element to the image URL
+          const imgElement = document.getElementById('imageElement');
+          imgElement.src =  'data:image/jpeg;base64,' +response.data.image;
+        } else {
+          console.error('Image data not found in the response.');
+        }
+
+           } catch (error) {
+          console.error('Error fetching image data:', error);
+        }
+      }
+  
+      // Call the fetchImageData function when the page loads
+      window.onload = fetchImageData;
+    </script>
+</body>
+</html>
