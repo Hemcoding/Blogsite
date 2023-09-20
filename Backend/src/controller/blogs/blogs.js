@@ -231,7 +231,6 @@ const fetchBlogs = async(req,res)=>{
 
 const fetchBlogsCategory = async(req,res)=>{
     try {
-        
         const {error} = blogs.fetchBlogsCategory.validate(req.body)
         if(error){
             return res.json({
@@ -243,7 +242,7 @@ const fetchBlogsCategory = async(req,res)=>{
         const {offset,category,limit} = req.body
         const category_id2 = await knex('categories').select('category_id').where('name',category)
         const category_id = category_id2[0].category_id
-        const blogs2 = await knex('blogs').select('blog_id','title','description','image_destination','image_filename','publish_date','likes','dislikes','username').where('category_id',category_id).limit(limit).offset(offset*limit).orderBy('blog_id','desc')
+        const blogs2 = await knex('blogs').select('blog_id','title','description','image_destination','image_filename','publish_date','likes','dislikes','username','category').where('category_id',category_id).limit(limit).offset(offset*limit).orderBy('blog_id','desc')
 
         if(blogs2.length == 0){
             return res.status(404).json({
@@ -512,4 +511,10 @@ export default {
     fetchBlogsCategory,
     deleteBlog,
     fetchBlogsUser
+}
+
+const obj = {
+    multiply(x, y) {
+      return x * y;
+    }
 }
