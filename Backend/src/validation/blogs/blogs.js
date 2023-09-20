@@ -9,7 +9,7 @@ const verifyBlog = Joi.object({
     "string.length": `"Blog description" must have 120 words and maximum upto 1500 words`,
   }),
   category: Joi.string().min(1).max(30).required().messages({
-    "string.empty": `"category id" is a required field.`,
+    "string.empty": `"category" is a required field.`,
   }),
 });
 
@@ -39,7 +39,7 @@ const fetchBlogsCategory = Joi.object({
     "string.empty":`"category" is a required field.`
   }),
   limit: Joi.number().min(1).max(50).required().messages({
-    "number.empty":`"offset" is a required field.`
+    "number.empty":`"limit" is a required field.`
   })
 })
 
@@ -48,7 +48,7 @@ const fetchBlog = Joi.object({
     "number.empty":`"offset" is a required field.`
   }),
   limit: Joi.number().min(1).max(50).required().messages({
-    "number.empty":`"offset" is a required field.`
+    "number.empty":`"limit" is a required field.`
   }),
 })
 
@@ -67,7 +67,7 @@ const fetchBlogsUser = Joi.object({
     "number.empty":`"offset" is a required field.`
   }),
   limit: Joi.number().min(1).max(50).required().messages({
-    "number.empty":`"offset" is a required field.`
+    "number.empty":`"limit" is a required field.`
   })
 })
 

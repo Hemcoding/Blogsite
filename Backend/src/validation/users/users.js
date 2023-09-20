@@ -7,8 +7,8 @@ const signUp = Joi.object({
     .regex(/^[A-Z, a-z]+$/)
     .required()
     .messages({
-      "string.empty": `"firstname" is a required field.`,
-      "string.length": `"firstname" must contain at least 1 or maximum 255 characters`,
+      "string.empty": `"First Name" is a required field.`,
+      "string.length": `"First Name" must contain at least 1 or maximum 255 characters`,
     }),
   lastname: Joi.string()
     .min(1)
@@ -16,51 +16,51 @@ const signUp = Joi.object({
     .regex(/^[A-Z, a-z]+$/)
     .required()
     .messages({
-      "string.empty": `"lastname" is a required field.`,
-      "string.length": `"lastname" must contain at least 1 or maximum 255 characters`,
+      "string.empty": `"Last Name" is a required field.`,
+      "string.length": `"Last Name" must contain at least 1 or maximum 255 characters`,
     }),
   email: Joi.string().min(8).max(255).email().trim().required().messages({
-    "string.empty": `"email" is a required field.`,
+    "string.empty": `"Email" is a required field.`,
     "email.base": `enter valid "email"`,
   }),
   mobileno: Joi.string().min(13).max(13).required().messages({
-    "string.empty": `"mobile number" is a required field.`,
-    "string.length": `"mobile number" must contain 10 digits.`,
+    "string.empty": `"Mobile Number" is a required field.`,
+    "string.length": `"Mobile Number" must contain 10 digits.`,
   }),
   username: Joi.string().min(4).max(20).required().messages({
-    "string.empty": `"username" is a required field.`,
-    "string.length": `"username" must be between 4 to 20 character long.`,
+    "string.empty": `"Username" is a required field.`,
+    "string.length": `"Username" must be between 4 to 20 character long.`,
   }),
   password: Joi.string().trim().min(8).max(35).regex(/^(?=.*\d)(?=.*[!@#$%^&*])(?=.*[a-z])(?=.*[A-Z]).{8,35}$/).required().messages({
-    "string.empty": `"password" is a required field.`,
-    "string.length": `"password" must contain 8 to 35 characters.`,
+    "string.empty": `"Password" is a required field.`,
+    "string.length": `"Password" must contain 8 to 35 characters.`,
   }),
   role: Joi.string().trim().valid('author','reader').required() 
 });
 
 const login = Joi.object({
   email: Joi.string().min(4).trim().required().messages({
-    "string.empty": `"email" is a required field.`,
-    "string.length": `"email" must be between 4 to 20 character long.`,
+    "string.empty": `"Email" is a required field.`,
+    "string.length": `"Email" must be between 4 to 20 character long.`,
   }),
   password: Joi.string().trim().min(8).max(35).regex(/^(?=.*\d)(?=.*[!@#$%^&*])(?=.*[a-z])(?=.*[A-Z]).{8,35}$/).required().messages({
-    "string.empty": `"password" is a required field.`,
-    "string.length": `"password" must contain 8 to 35 characters.`,
+    "string.empty": `"Password" is a required field.`,
+    "string.length": `"Password" must contain 8 to 35 characters.`,
   })
 })
 
 const passwordResetEmail = Joi.object({
   email: Joi.string().min(8).max(255).email().trim().required().messages({
-    "string.empty": `"email" is a required field.`,
-    "email.base": `enter valid "email"`,
+    "string.empty": `"Email" is a required field.`,
+    "email.base": `enter valid "Email"`,
   })
 })
 
 const passwordReset = Joi.object({
   token:Joi.string().required(),
   newPassword: Joi.string().trim().min(8).max(35).regex(/^(?=.*\d)(?=.*[!@#$%^&*])(?=.*[a-z])(?=.*[A-Z]).{8,35}$/).required().messages({
-    "string.empty": `"password" is a required field.`,
-    "string.length": `"password" must contain 8 to 35 characters.`,
+    "string.empty": `"Password" is a required field.`,
+    "string.length": `"Password" must contain 8 to 35 characters.`,
   })
 })
 export default {

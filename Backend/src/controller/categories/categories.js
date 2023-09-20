@@ -23,7 +23,7 @@ const addCategory = async(req,res)=>{m
             })
         }
 
-        console.log(category.formatCategory(name))
+      //  console.log(category.formatCategory(name))
         const data = {
             name:category.formatCategory(name),
             status:'YES'

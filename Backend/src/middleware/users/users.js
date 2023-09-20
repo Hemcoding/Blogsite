@@ -4,6 +4,7 @@ import constant from "../../helpers/constant.js";
 
 // import test from '../../uploads/blogs'
 
+//Local Storage access by multer for stroing user profile picture
  const storage = multer.diskStorage({
     destination:(req,file,cb)=>{
         return cb(null,'./src/uploads/users')
@@ -14,12 +15,15 @@ import constant from "../../helpers/constant.js";
 })
 const upload = multer({storage:storage})
 
+//Transporter for sending mail 
 const transporter = nodemailer.createTransport({
     service: constant.service ,
     auth:constant.auth,
   });
 
+  //Password reset email with the help of Nodemailer
   const sendPasswordResetEmail = (email,resetToken) =>{
+    //Mail Content
     const mailOptions = {
         from: constant.auth.user,
         to: email,
@@ -32,6 +36,7 @@ const transporter = nodemailer.createTransport({
         `,
       };
     
+      //sending email with the help of transponter
       transporter.sendMail(mailOptions, (error, info) => {
         if (error) {
           console.error('Error sending email:', error);

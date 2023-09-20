@@ -4,6 +4,7 @@ import blog from '../../middleware/blogs/blogs.js'
 
 const router = express.Router()
 
+//routes related to Blog
 router.post('/postBlog',blog.upload.single('image'),blogs.postBlog)
 router.post('/getBlogs',blogs.fetchBlogs)
 router.post('/blogsByCategory',blogs.fetchBlogsCategory)

@@ -5,7 +5,7 @@ const checkComment = joi.object({
         'string.empty':`"comment" is a required field.`
     }),
     blog_id: joi.number().min(1).required().messages({
-        'number.empty':`"blog_id" is a required field.`
+        'number.empty':`"Blog id" is a required field.`
     })
 })
 

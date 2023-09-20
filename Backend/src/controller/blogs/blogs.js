@@ -93,6 +93,7 @@ const tempblog = async(req,res)=>{
 }
 */
 
+
 const postBlog = async(req,res)=>{
     try {
       //  console.log(req.body)
@@ -511,10 +512,4 @@ export default {
     fetchBlogsCategory,
     deleteBlog,
     fetchBlogsUser
-}
-
-const obj = {
-    multiply(x, y) {
-      return x * y;
-    }
 }
