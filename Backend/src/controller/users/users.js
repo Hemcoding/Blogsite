@@ -93,7 +93,7 @@ const userLogin = async (req, res) => {
    // let login;
   //  if(email){
    const login = await knex("users")
-      .select("user_id", "username", "password","first_name","last_name","mobile_no","profile_destination","profile_filename")
+      .select("user_id", "username", "password","first_name","last_name","email","mobile_no","profile_destination","profile_filename")
       .where("username", email)
       .orWhere("email", email);
     //}
@@ -151,7 +151,7 @@ const userLogin = async (req, res) => {
       first_name:login[0].first_name,
       last_name:login[0].last_name,
       mobile_no:login[0].mobile_no,
-      email:email,
+      email:login[0].email,
       image:login[0].image
     }
 

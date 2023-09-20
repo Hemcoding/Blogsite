@@ -27,7 +27,7 @@ const transporter = nodemailer.createTransport({
         html: `
           <p>You requested a password reset for your account.</p>
           <p>Click the following link to reset your password:</p>
-          <a href="http://10.201.1.171:8000/resetPassword?token=${resetToken}">Reset Password</a>
+          <a href="http://10.201.1.195:8000/resetPassword?token=${resetToken}">Reset Password</a>
           <p>If you didn't request this, please ignore this email.</p>
         `,
       };

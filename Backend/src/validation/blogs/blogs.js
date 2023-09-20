@@ -52,11 +52,22 @@ const deleteBlog = Joi.object({
   })
 })
 
+const fetchBlogsUser = Joi.object({
+  username: Joi.string().min(4).max(20).required().messages({
+    "string.empty": `"username" is a required field.`,
+    "string.length": `"username" must be between 4 to 20 character long.`,
+  }),
+  offset: Joi.number().min(0).required().messages({
+    "number.empty":`"offset" is a required field.`
+  })
+})
+
 export default {
   verifyBlog,
   likes,
   dislikes,
   fetchBlogsCategory,
   fetchBlog,
-  deleteBlog
+  deleteBlog,
+  fetchBlogsUser
 };

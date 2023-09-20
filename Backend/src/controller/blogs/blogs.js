@@ -185,7 +185,7 @@ const fetchBlogs = async(req,res)=>{
         }
 
         const {offset} = req.body
-        const blogs2 = await knex('blogs').select('blog_id','title','description','image_destination','image_filename','publish_date','category').limit(10).offset(offset*10).orderBy('blog_id','desc')
+        const blogs2 = await knex('blogs').select('blog_id','title','description','image_destination','image_filename','publish_date','category','username').limit(10).offset(offset*10).orderBy('blog_id','desc')
 
         if(blogs2.length == 0){
             return res.status(404).json({
@@ -242,7 +242,7 @@ const fetchBlogsCategory = async(req,res)=>{
         const {offset,category} = req.body
         const category_id2 = await knex('categories').select('category_id').where('name',category)
         const category_id = category_id2[0].category_id
-        const blogs2 = await knex('blogs').select('blog_id','title','description','image_destination','image_filename','publish_date','likes','dislikes','user_id').where('category_id',category_id).limit(10).offset(offset*10).orderBy('blog_id','desc')
+        const blogs2 = await knex('blogs').select('blog_id','title','description','image_destination','image_filename','publish_date','likes','dislikes','username').where('category_id',category_id).limit(10).offset(offset*10).orderBy('blog_id','desc')
 
         if(blogs2.length == 0){
             return res.status(404).json({
@@ -281,6 +281,58 @@ const fetchBlogsCategory = async(req,res)=>{
             Message:error.message
         })
     }
+}
+
+const fetchBlogsUser = async(req,res)=>{
+    try {
+        const {error} = blogs.fetchBlogsUser.validate(req.body)
+        if(error){
+            return res.json({
+                Error : true,
+                Message:error.message
+            })
+        }
+            const {username,offset} = req.body
+        
+        const fetchBlog = await knex('blogs').select('blog_id','title','description','image_destination','image_filename','publish_date','likes','dislikes','username').where('username',username).limit(10).offset(offset*10).orderBy('blog_id','desc')
+       if(fetchBlog.length == 0){
+        return res.status(404).json({
+            Error :true,
+            Message :"No blogs to fetch"
+        })
+       }
+
+       
+       for(let i=0;i<fetchBlog.length;i++){
+
+        const image_filename = fetchBlog[i].image_filename
+        const __filename = fileURLToPath(import.meta.url);
+        const __dirname = dirname(__filename);
+         const imagePath = path.join(__dirname,'../../uploads/blogs',image_filename)
+       if(fs.existsSync(imagePath)){
+        const imageBinaryData = fs.readFileSync(imagePath)
+
+        const imageBase64 = Buffer.from(imageBinaryData).toString('base64')
+
+        fetchBlog[i].image =imageBase64
+      
+       }
+
+        }
+
+       return res.status(200).json({
+            Error:false,
+            Message:"Blogs has been fetched",
+            Data :fetchBlog,
+       })
+    
+    } catch (error) {
+        return res.status(404).json({
+            Error:true,
+            Message:error.message
+        })
+    }
+
 }
 
 const likes = async(req,res)=>{
@@ -457,5 +509,6 @@ export default {
     likes,
     dislikes,
     fetchBlogsCategory,
-    deleteBlog
+    deleteBlog,
+    fetchBlogsUser
 }
