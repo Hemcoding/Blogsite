@@ -37,6 +37,9 @@ const fetchBlogsCategory = Joi.object({
   }),
   category: Joi.string().required().messages({
     "string.empty":`"category" is a required field.`
+  }),
+  limit: Joi.number().min(1).max(50).required().messages({
+    "number.empty":`"offset" is a required field.`
   })
 })
 
@@ -61,6 +64,9 @@ const fetchBlogsUser = Joi.object({
     "string.length": `"username" must be between 4 to 20 character long.`,
   }),
   offset: Joi.number().min(0).required().messages({
+    "number.empty":`"offset" is a required field.`
+  }),
+  limit: Joi.number().min(1).max(50).required().messages({
     "number.empty":`"offset" is a required field.`
   })
 })

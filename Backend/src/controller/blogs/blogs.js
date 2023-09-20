@@ -214,6 +214,7 @@ const fetchBlogs = async(req,res)=>{
         return res.json({
             Error:false,
             Message:'Blogs has been fetched',
+            Length:blogs2.length,
             Data:blogs2
         })
         // console.log(file)
@@ -239,10 +240,10 @@ const fetchBlogsCategory = async(req,res)=>{
             })
         }
 
-        const {offset,category} = req.body
+        const {offset,category,limit} = req.body
         const category_id2 = await knex('categories').select('category_id').where('name',category)
         const category_id = category_id2[0].category_id
-        const blogs2 = await knex('blogs').select('blog_id','title','description','image_destination','image_filename','publish_date','likes','dislikes','username').where('category_id',category_id).limit(10).offset(offset*10).orderBy('blog_id','desc')
+        const blogs2 = await knex('blogs').select('blog_id','title','description','image_destination','image_filename','publish_date','likes','dislikes','username').where('category_id',category_id).limit(limit).offset(offset*limit).orderBy('blog_id','desc')
 
         if(blogs2.length == 0){
             return res.status(404).json({
@@ -294,7 +295,7 @@ const fetchBlogsUser = async(req,res)=>{
         }
             const {username,offset} = req.body
         
-        const fetchBlog = await knex('blogs').select('blog_id','title','description','image_destination','image_filename','publish_date','likes','dislikes','username').where('username',username).limit(10).offset(offset*10).orderBy('blog_id','desc')
+        const fetchBlog = await knex('blogs').select('blog_id','title','description','image_destination','image_filename','publish_date','likes','dislikes','username').where('username',username).limit(limit).offset(offset*limit).orderBy('blog_id','desc')
        if(fetchBlog.length == 0){
         return res.status(404).json({
             Error :true,
