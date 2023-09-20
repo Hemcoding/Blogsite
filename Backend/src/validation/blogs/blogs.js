@@ -44,6 +44,9 @@ const fetchBlog = Joi.object({
   offset: Joi.number().min(0).required().messages({
     "number.empty":`"offset" is a required field.`
   }),
+  limit: Joi.number().min(1).max(50).required().messages({
+    "number.empty":`"offset" is a required field.`
+  }),
 })
 
 const deleteBlog = Joi.object({

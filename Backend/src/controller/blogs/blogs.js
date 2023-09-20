@@ -184,8 +184,8 @@ const fetchBlogs = async(req,res)=>{
             })
         }
 
-        const {offset} = req.body
-        const blogs2 = await knex('blogs').select('blog_id','title','description','image_destination','image_filename','publish_date','category','username').limit(10).offset(offset*10).orderBy('blog_id','desc')
+        const {offset,limit} = req.body
+        const blogs2 = await knex('blogs').select('blog_id','title','description','image_destination','image_filename','publish_date','category','username').limit(limit).offset(offset*limit).orderBy('blog_id','desc')
 
         if(blogs2.length == 0){
             return res.status(404).json({
