@@ -71,6 +71,12 @@ const fetchBlogsUser = Joi.object({
   })
 })
 
+const fetchBlogsById = Joi.object({
+  blog_id:Joi.number().min(1).required().messages({
+    'number.empty':`"Blog Id " is a required field.`
+  })
+})
+
 export default {
   verifyBlog,
   likes,
@@ -78,5 +84,6 @@ export default {
   fetchBlogsCategory,
   fetchBlog,
   deleteBlog,
-  fetchBlogsUser
+  fetchBlogsUser,
+  fetchBlogsById
 };

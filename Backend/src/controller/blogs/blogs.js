@@ -97,38 +97,43 @@ const tempblog = async(req,res)=>{
 const postBlog = async(req,res)=>{
     try {
       //  console.log(req.body)
+      //Validating file
         if(!req.file){
-            return res.json({
+            return res.status(404).json({
                 Error:true,
                 Message:"Please upload the file"
             })
         }
+
+        //Validation for posting blog
         const {error} = blogs.verifyBlog.validate(req.body)
         if(error){
-            return res.json({
+            return res.status(400).json({
                 Error : true,
                 Message:error.message
             })
         }
 
+        //Destructuring the req object (body , file)
         const {title , description , category} = req.body 
         const {destination , filename} = req.file
-      // console.log(category)
+      
+        //Verifying the Auth Token and extracting info from payload
         const token = req.headers.authorization.split(" ")[1]
-        console.log(token)
-       const temp =  jwt.verify(token, constant.accessToken.secret).data
+        const temp =  jwt.verify(token, constant.accessToken.secret).data
         const Tokendata = temp.id
         const Username = temp.username
 
+        //Checkin if it is not a duplicate entery in database
         const checkBlog = await knex('blogs').select('*').where("title" ,'=',title).andWhere("description",'=',description)
-
         if(checkBlog.length >=1){
-            return res.status(404).json({
+            return res.status(400).json({
                 Error:false,
                 Message:"Blog already exsits"
             })
         }
        
+        //Fetching category Id from category passed in req body from front-end
         const category_id = await knex('categories').select('category_id').where('name',category)
         if(category_id.length == 0){
             return res.status(404).json({
@@ -136,6 +141,8 @@ const postBlog = async(req,res)=>{
                 Message:"Category doesn't exsits"
             })
         }
+
+        //Object of Data to be inserted in Blog
         const data ={
             title:title,
             description:description,
@@ -154,7 +161,7 @@ const postBlog = async(req,res)=>{
         const insertedRows = await knex.insert(data).into('blogs')
 
         if(insertedRows.length == 0){
-            return res.status(404).json({
+            return res.status(400).json({
                 Error:false,
                 Message :"Blog has not been inserted to database",
             })
@@ -162,13 +169,12 @@ const postBlog = async(req,res)=>{
        
         res.status(200).json({
             Error:false,
-            Message:"Blog has been inserted",
-            Data:insertedRows
+            Message:"Blog has been inserted"
         })
         res.end()
 
     } catch (error) {
-        return res.json({
+        return res.status(400).json({
            Error:true,
            Message:error.message
         })
@@ -320,6 +326,55 @@ const fetchBlogsUser = async(req,res)=>{
        }
 
         }
+
+       return res.status(200).json({
+            Error:false,
+            Message:"Blogs has been fetched",
+            Data :fetchBlog,
+       })
+    
+    } catch (error) {
+        return res.status(404).json({
+            Error:true,
+            Message:error.message
+        })
+    }
+
+}
+
+const fetchBlogsById = async(req,res)=>{
+    try {
+        const {error} = blogs.fetchBlogsById.validate(req.body)
+        if(error){
+            return res.json({
+                Error : true,
+                Message:error.message
+            })
+        }
+            const {blog_id} = req.body
+        
+        const fetchBlog = await knex('blogs').select('blog_id','title','description','image_destination','image_filename','publish_date','likes','dislikes','username').where('blog_id',blog_id)
+       if(fetchBlog.length == 0){
+        return res.status(404).json({
+            Error :true,
+            Message :"No blogs to fetch"
+        })
+       }
+
+       
+       
+
+        const image_filename = fetchBlog[0].image_filename
+        const __filename = fileURLToPath(import.meta.url);
+        const __dirname = dirname(__filename);
+         const imagePath = path.join(__dirname,'../../uploads/blogs',image_filename)
+       if(fs.existsSync(imagePath)){
+        const imageBinaryData = fs.readFileSync(imagePath)
+
+        const imageBase64 = Buffer.from(imageBinaryData).toString('base64')
+
+        fetchBlog[0].image =imageBase64
+      }
 
        return res.status(200).json({
             Error:false,
@@ -511,5 +566,6 @@ export default {
     dislikes,
     fetchBlogsCategory,
     deleteBlog,
-    fetchBlogsUser
+    fetchBlogsUser,
+    fetchBlogsById
 }
