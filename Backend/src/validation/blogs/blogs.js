@@ -14,19 +14,20 @@ const verifyBlog = Joi.object({
 });
 
 const likes = Joi.object({
-  blog_id: Joi.number().min(1).required().messages({
+  blog_id: Joi.number().integer().min(1).required().messages({
     "number.empty": `"Blog id" is a required field.`,
   }),
-  like: Joi.number().valid(1, -1).required().messages({
+  like: Joi.number().integer().valid(1, -1).required().messages({
     "number.empty": `"like" is a required field.`,
   }),
+  
 });
 
 const dislikes = Joi.object({
-  blog_id: Joi.number().min(1).required().messages({
+  blog_id: Joi.number().integer().min(1).required().messages({
     "number.empty": `"Blog id" is a required field.`,
   }),
-  dislike: Joi.number().valid(1, -1).required().messages({
+  dislike: Joi.number().integer().valid(1, -1).required().messages({
     "number.empty": `"dislike" is a required field.`,
   }),
 });

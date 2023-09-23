@@ -93,7 +93,6 @@ const tempblog = async(req,res)=>{
 }
 */
 
-
 const postBlog = async(req,res)=>{
     try {
       //  console.log(req.body)
@@ -192,7 +191,7 @@ const fetchBlogs = async(req,res)=>{
         }
 
         const {offset,limit} = req.body
-        const blogs2 = await knex('blogs').select('blog_id','title','description','image_destination','image_filename','publish_date','category','username').limit(limit).offset(offset*limit).orderBy('blog_id','desc')
+        const blogs2 = await knex('blogs').select('blog_id','title','description','image_destination','image_filename','publish_date','category','username').limit(parseInt(limit)).offset(parseInt(offset)*parseInt(limit)).orderBy('blog_id','desc')
 
         if(blogs2.length == 0){
             return res.status(404).json({
@@ -249,7 +248,7 @@ const fetchBlogsCategory = async(req,res)=>{
         const {offset,category,limit} = req.body
         const category_id2 = await knex('categories').select('category_id').where('name',category)
         const category_id = category_id2[0].category_id
-        const blogs2 = await knex('blogs').select('blog_id','title','description','image_destination','image_filename','publish_date','likes','dislikes','username','category').where('category_id',category_id).limit(limit).offset(offset*limit).orderBy('blog_id','desc')
+        const blogs2 = await knex('blogs').select('blog_id','title','description','image_destination','image_filename','publish_date','likes','dislikes','username','category').where('category_id',category_id).limit(parseInt(limit)).offset(parseInt(offset)*parseInt(limit)).orderBy('blog_id','desc')
 
         if(blogs2.length == 0){
             return res.status(404).json({
@@ -301,7 +300,7 @@ const fetchBlogsUser = async(req,res)=>{
         }
             const {username,offset} = req.body
         
-        const fetchBlog = await knex('blogs').select('blog_id','title','description','image_destination','image_filename','publish_date','likes','dislikes','username').where('username',username).limit(limit).offset(offset*limit).orderBy('blog_id','desc')
+        const fetchBlog = await knex('blogs').select('blog_id','title','description','image_destination','image_filename','publish_date','likes','dislikes','username').where('username',username).limit(parseInt(limit)).offset(parseInt(offset)*parseInt(limit)).orderBy('blog_id','desc')
        if(fetchBlog.length == 0){
         return res.status(404).json({
             Error :true,
@@ -353,7 +352,7 @@ const fetchBlogsById = async(req,res)=>{
         }
             const {blog_id} = req.body
         
-        const fetchBlog = await knex('blogs').select('blog_id','title','description','image_destination','image_filename','publish_date','likes','dislikes','username').where('blog_id',blog_id)
+        const fetchBlog = await knex('blogs').select('blog_id','title','description','image_destination','image_filename','publish_date','likes','dislikes','username','category',).where('blog_id',blog_id)
        if(fetchBlog.length == 0){
         return res.status(404).json({
             Error :true,
@@ -361,8 +360,9 @@ const fetchBlogsById = async(req,res)=>{
         })
        }
 
+       const fetchComments = await knex('comments').select('comment','username','comment_id').where('blog_id',fetchBlog[0].blog_id)
        
-       
+       fetchBlog[0].comments = fetchComments
 
         const image_filename = fetchBlog[0].image_filename
         const __filename = fileURLToPath(import.meta.url);
@@ -417,7 +417,7 @@ const likes = async(req,res)=>{
                 Message :"Likes has been updated"
             })
         }
-      const liked = await knex('blogs').update('likes',oldlikes[0].likes + like).where('blog_id',blog_id)
+      const liked = await knex('blogs').update('likes',oldlikes[0].likes + parseInt(like)).where('blog_id',blog_id)
       
       if(liked.length == 0 ){
         return res.json({
@@ -429,7 +429,7 @@ const likes = async(req,res)=>{
       return res.json({
         Error:false,
         Message:'Likes has been updated',
-        Likes :oldlikes[0].likes + like
+        Likes :oldlikes[0].likes + parseInt(like)
       })
     } catch (error) {
         return res.json({
@@ -465,7 +465,7 @@ const dislikes = async(req,res)=>{
                 Message :"Dislikes has been updated"
             })
         }
-      const disliked = await knex('blogs').update('dislikes',olddislikes[0].dislikes + dislike).where('blog_id',blog_id)
+      const disliked = await knex('blogs').update('dislikes',olddislikes[0].dislikes + parseInt(dislike)).where('blog_id',blog_id)
       
       if(disliked.length == 0 ){
         return res.json({
@@ -477,7 +477,7 @@ const dislikes = async(req,res)=>{
       return res.json({
         Error:false,
         Message:'Dislikes has been updated',
-        Dislikes :olddislikes[0].dislikes + dislike
+        Dislikes :olddislikes[0].dislikes + parseInt(dislike)
       })
     } catch (error) {
         return res.json({
@@ -512,7 +512,7 @@ const deleteBlog = async(req,res)=>{
         if(blogs2.length == 0){
             return res.json({
                 Error:false,
-                Message:"blog doesn't exsits "
+                Message:"blog doesn't exists or Invalid Credentialss"
             }) 
         }
 
