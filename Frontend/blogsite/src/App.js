@@ -1,12 +1,14 @@
 import Role from "./Component/Role/Role.js";
-import Login from "./Component/User/login/Login.js"
-// import AuthSignup from "./Component/Author/signup/signup.js"
+// import Login from "./Component/User/login/Login.js"
 import Signup from "./Component/User/signup/signup.js";
 import Userhome from "./Component/User/home/Userhome.js";
 import Auth from "./Component/auth/Author.js"
 import {Route, Routes} from  "react-router-dom"
+import Login from "./Component/User/login/Login.js";
 
 import './App.css';
+import Autherdetails from "./Component/autherdetail/Autherdetails.js";
+import Blogread from "./Component/blogread/Blogread.js";
 
 function App() {
   return (
@@ -22,6 +24,9 @@ function App() {
 
         <Route path="/reader/home" element={<Userhome/>}/>
         <Route path="/author/home" element={<Auth/>}/>
+
+        <Route path="/author/details" element={<Autherdetails/>}/>
+        <Route path="/reader/home/blog/:blog_id" element={<Blogread/>}/>
       
     </Routes>
    

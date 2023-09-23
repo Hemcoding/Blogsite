@@ -2,59 +2,47 @@ import React from "react";
 import { Form, Row, Col, FormGroup, Label, Input, Button } from "reactstrap";
 import "./login.scss";
 import { Link, useNavigate } from "react-router-dom";
-// import axios from "axios";
+import axios from "axios";
 import { useForm, Controller } from "react-hook-form";
-import { useDispatch } from "react-redux";
-// import { loginUser } from "../../../Redux/slice/userSclice"; 
-import { loginAsync } from "../../../Redux/userAction";
+import { useUser } from "../UserContext";
+
 
 const Login = (props) => {
   let route = `/${props.role}/signup`;
   let home = `/${props.role}/home`;
 
+  const {login} = useUser()
+
   const { handleSubmit, control, formState: { errors }, reset } = useForm();
   const navigation = useNavigate();
 
-  const dispatch = useDispatch();
+  const onSubmit = async (data) => {
+    const body = JSON.stringify(data);
+    console.log(body);
 
-  // const onSubmit = async (data) => {
-  //   const body = JSON.stringify(data);
-  //   console.log(body);
+    try {
+      const response = await axios.post(
+        "http://localhost:8000/users/loginUser",
+        body,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      console.log(response);
 
-  //   try {
-  //     const response = await axios.post(
-  //       "http://10.201.1.171:8000/users/loginUser",
-  //       body,
-  //       {
-  //         headers: {
-  //           "Content-Type": "application/json",
-  //         },
-  //       }
-  //     );
-  //     console.log(response);
-
-  //     if (!response.data.Error) {
-  //       reset(); 
-  //       dispatch(loginUser(data)); 
-  //       navigation("/reader/home"); 
-  //     }
-  //   } catch (error) {
-  //     console.error(error);
-  //   }
-  // };
-  const onSubmit = (data) => {
-    const isLoginSuccessful = dispatch(loginAsync(data));
-     
-
-     
-    if (isLoginSuccessful) {
-      reset();
-      navigation(home);
-    }else{
-      console.log("error")
+      if (!response.data.Error) {
+        reset(); 
+        login(response.data.Data)
+        localStorage.setItem("user_info",JSON.stringify(response.data.Data))
+        localStorage.setItem("access_token",response.data.AccessToken)
+        navigation(home); 
+      }
+    } catch (error) {
+      console.error(error);
     }
   };
-
  
   return (
     <>
@@ -62,10 +50,10 @@ const Login = (props) => {
         className="container d-flex justify-content-center align-items-center"
         style={{ height: "100vh" }}
       >
-        <div className="card shadow-lg p-3 box">
+        <div className="card shadow-lg p-3 box border-warning">
           <div className="card-body">
             <h1 className="card-title mb-4">Login</h1>
-            <Form onSubmit={handleSubmit(onSubmit)} noValidate>
+            <Form onSubmit={handleSubmit(onSubmit)} autoComplete="off" noValidate>
               <Row>
                 <Col md={12}>
                   <FormGroup>
@@ -81,6 +69,7 @@ const Login = (props) => {
                           type="email"
                           value={field.value}
                           onChange={field.onChange}
+                          // className="border-warning"
                         />
                       )}
                       rules={{
@@ -114,7 +103,7 @@ const Login = (props) => {
                           type="password"
                           value={field.value}
                           onChange={field.onChange}
-                          
+                          // className="border-warning"
                         />
                       )}
                       rules={{
@@ -129,7 +118,7 @@ const Login = (props) => {
                   </FormGroup>
                 </Col>
               </Row>
-              <Button type="submit">Log In</Button>
+              <Button style={{border:"none"}} type="submit">Log In</Button>
             </Form>
             <p className="py-4">
               Don't have an Account? <Link to={route}>Sign Up</Link>

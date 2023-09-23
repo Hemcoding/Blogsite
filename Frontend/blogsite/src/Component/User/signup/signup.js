@@ -32,7 +32,7 @@ const Signup = (props) => {
     const body = JSON.stringify(user);
     console.log(body)
     await axios
-      .post("http://10.201.1.171:8000/users/registerUser", body, {
+      .post("http://localhost:8000/users/registerUser", body, {
         headers: {
           "Content-Type": "application/json",
         },
@@ -51,7 +51,7 @@ const Signup = (props) => {
         className="container d-flex justify-content-center align-items-center"
         // style={{height:"100vh"}}
       >
-        <div className="card shadow-lg p-3 box my-5">
+        <div className="card shadow-lg p-3 box my-5 border-warning">
           <div className="card-body ">
             <h1 className="card-title mb-4">Signup</h1>
             <Form autoComplete="off">
@@ -153,7 +153,7 @@ const Signup = (props) => {
                 </Col>
               </Row>
               {/* <div onClick={()=> navigation("/reader/login")}> */}
-                <Button onClick={() => {register();navigation("/reader/login");}}>Sign Up</Button>
+                <Button style={{border:"none"}} onClick={() => {register();navigation("/reader/login");}}>Sign Up</Button>
                 {/* </div> */}
             </Form>
 

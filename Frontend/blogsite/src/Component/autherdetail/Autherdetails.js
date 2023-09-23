@@ -1,54 +1,17 @@
 import React from "react";
 import styles from "./autherdetails.module.css";
+import NavBar from "../User/Navbar/Nav";
 
 function Autherdetails() {
   return (
-    <div>
-      <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <div class="container-fluid">
-          <a class="navbar-brand" href="#">
-            Blogsite
-          </a>
-          <button
-            class="navbar-toggler"
-            type="button"
-            data-bs-toggle="collapse"
-            data-bs-target="#navbarNavDropdown"
-            aria-controls="navbarNavDropdown"
-            aria-expanded="false"
-            aria-label="Toggle navigation"
-          >
-            <span class="navbar-toggler-icon"></span>
-          </button>
-          <div class="collapse navbar-collapse" id="navbarNavDropdown">
-            <ul class="navbar-nav">
-              <li class="nav-item">
-                <a class="nav-link active" aria-current="page" href="#">
-                  Home
-                </a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="#">
-                  Blog
-                </a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="#">
-                  Writing Blog
-                </a>
-              </li>
-              {/* //         <div class="text-end">
-//   <img src="" class="rounded" alt="..."/>
-// </div> */}
-            </ul>
-          </div>
-        </div>
-      </nav>
+    <>
+    <div style={{ marginBlock: "100px" }}>
+      <NavBar />
 
       <div className="container w-80 main mt-5 mb-5 ">
         <img
           src="https://m.economictimes.com/thumb/msid-71433991,width-200,height-200,resizemode-4,imgsize-1786236/amit-agarwal-says-hes-lucky-to-receive-a-good-upbringing-in-an-environment-that-valued-humility-honesty-grit-and-gratitude-.jpg"
-          className="rounded float-start mx-auto p-4 fs-2"
+          className="rounded-circle float-start mx-auto p-4 fs-2"
           alt="..."
         />
 
@@ -67,10 +30,10 @@ function Autherdetails() {
           </p>
         </div>
       </div>
-
-      {/* <div className={`${styles.card}`}> */}
-      <div className="container">
-        <h1 className="text-center m-3">Recent 3 Blog</h1>
+    </div>
+      <hr style={{width:"80%",margin:"auto"}} />
+      <div className="container flex jastify-content-center">
+        <h3 className="text-center mt-3">Recent 3 Blog</h3>
         <div className="row">
           <div class="card col-4 m-2" style={{ width: "22rem" }}>
             <img
@@ -127,7 +90,8 @@ function Autherdetails() {
           </div>
         </div>
       </div>
-    </div>
+      
+    </>
   );
 }
 

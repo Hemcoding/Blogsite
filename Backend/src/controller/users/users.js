@@ -100,6 +100,7 @@ const userLogin = async (req, res) => {
   // else{
    
   // }
+  // console.log(login)
   
     const auth = await bcrypt.compare(password, login[0].password);
 
@@ -248,7 +249,7 @@ const imageUpload = async(req,res)=>{
 const getProfile = async(req,res)=>{
   try {
     const token = req.headers.authorization.split(" ")[1]
-  // console.log(token)
+  console.log(token);
   const temp =  jwt.verify(token, constant.accessToken.secret).data
    const Tokendata = temp.id
    const Username = temp.username

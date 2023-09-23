@@ -1,0 +1,32 @@
+.mydesign{
+    overflow: auto;
+    }
+    
+    body{
+        background-color: rgb(246, 249, 250);
+    }
+    .details{
+        
+        width:100%;
+        height: 450px;
+        margin-top: 30px;
+        margin-bottom: 20px;
+       border-radius: 10px;
+        align-items: center;
+    }
+    p{
+        text-align: justify;
+    }
+    .flex{
+        display: flex;
+        align-items: flex-start;
+    }
+
+.blog{
+    width:80%;
+}    
+
+.desc{
+    width:100%;
+    /* word-wrap:"break-word"; */
+}

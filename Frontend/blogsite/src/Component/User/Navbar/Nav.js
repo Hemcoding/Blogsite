@@ -1,31 +1,84 @@
 import React, { useRef, useState } from "react";
 import "./Navbar.scss";
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter, DropdownMenu, DropdownItem } from "reactstrap";
-import { useSelector } from "react-redux";
+// import { useUser } from "../UserContext";
+import axios from "axios"
 
 const NavBar = () => {
   const [modal, setModal] = useState(false);
-
-  const user = useSelector((state) => state.user);
-
+  const [profile, setProfile] = useState({
+    image:""
+  })
+  const [url, setUrl] = useState("")
+  // const [User, setUser] = useState({})
+  const token = localStorage.getItem("access_token")
+  localStorage.setItem("url",url)
+  const user_info = localStorage.getItem("user_info")
+  const imageUrl = localStorage.getItem("url")
+  const parseuser = JSON.parse(user_info)
+  
+  const {image,first_name,last_name,email} = parseuser
+ 
+  // const {user} = useUser()
+  
+  // const {first_name ,last_name,email} = user
   const toggle = () => setModal(!modal);
-  const inputRef = useRef(null);
-
-  const handleClick = () => {
-    inputRef.current.click();
-  };
-
-  const handleFileChange = (event) => {
-    const fileObj = event.target.files && event.target.files[0];
-    if (!fileObj) {
-      return;
-    }
+ 
+    const handleChange = (e) => {
+      const {name, value} = e.target;
+  
+  
+      setProfile({...profile, [name]: value})
   }
 
+  const onSubmit = async (event) => {
+    
+      event.preventDefault(); 
+      
+      const form = event.target
+      console.log(form)
+      const formData = new FormData(form);
+      
+      try {
+        const response = await axios.post(
+          "http://localhost:8000/users/setProfile",
+          formData,
+          {
+            headers: {
+              "Content-Type": "multipart/form-data",
+              "authorization": `b ${token}`
+            },
+          }
+        );
+        console.log(response);
+
+        const res = await axios.post(
+          "http://localhost:8000/users/getProfile",
+          {},
+          {
+            headers: {
+              "Content-Type": "application/json",
+              "authorization": `b ${token}`
+            },
+          }
+        );
+
+        setUrl(res.data.image)
+        console.log(url)
+        // if (!response.data.Error) {
+  
+        //   alert("profile image is posted Successfully");
+        // }
 
 
-  // event.target.value=null
 
+      } catch (e) {
+        console.error(e);
+      }
+    
+  }
+  const profileImg = imageUrl? imageUrl : image;
+  
   return (
     <>
       <nav className="nav">
@@ -66,40 +119,16 @@ const NavBar = () => {
             </ul>
           </div>
           <div className="user-profile">
-            <p>{user}</p>
+            <p>{first_name+" "+last_name}</p>
             <img
               onClick={toggle}
               className="user-img"
-              src="https://cdn.pixabay.com/photo/2020/07/01/12/58/icon-5359553_1280.png"
+              src={'data:image/jpeg;base64,'+ profileImg}
             />
           </div>
         </div>
       </nav>
-      <DropdownMenu dark toggle={toggle}>
-    <DropdownItem header>
-      Header
-    </DropdownItem>
-    <DropdownItem>
-      Some Action
-    </DropdownItem>
-    <DropdownItem text>
-      Dropdown Item Text
-    </DropdownItem>
-    <DropdownItem disabled>
-      Action (disabled)
-    </DropdownItem>
-    <DropdownItem divider />
-    <DropdownItem>
-      Foo Action
-    </DropdownItem>
-    <DropdownItem>
-      Bar Action
-    </DropdownItem>
-    <DropdownItem>
-      Quo Action
-    </DropdownItem>
-  </DropdownMenu>
-
+     
 
       <Modal isOpen={modal}  fullscreen>
         <ModalHeader toggle={toggle}>Your Profile</ModalHeader>
@@ -107,31 +136,32 @@ const NavBar = () => {
           <div className="user-details-container">
             <div className="edit-img-box">
               <img
-                className="user-profile-img"
-                src="https://cdn.pixabay.com/photo/2020/07/01/12/58/icon-5359553_1280.png"
+                className="user-profile-img rounded-circle"
+                src={'data:image/jpeg;base64,'+ profileImg}
                 alt=""
               />
+              <form onSubmit={onSubmit}>
+                
               <input
-                style={{ display: "none" }}
-                ref={inputRef}
-                type="file"
-                onChange={handleFileChange}
-              />
-              <button className="edit-btn" onClick={handleClick}>
-                Edit image +
-              </button>
+                  accept="image/*"
+                  onChange={handleChange}
+                  name="image"
+                  type="file"
+                  className="form-control border-warning"
+                  id="image"
+                />
+                <Button className="btn my-3 border-0" type="submit">Update</Button>
+                </form>
             </div>
             <div className="details">
-              <h3>Hemanshu Parmar</h3>
-              <p>hemanshup@gmail.com</p>
+              <h3>{first_name+" "+last_name}</h3>
+              <p>{email}</p>
             </div>
           </div>
         </ModalBody>
         <ModalFooter>
-          <Button color="primary" onClick={toggle}>
-            Update
-          </Button>{" "}
-          <Button color="secondary" onClick={toggle}>
+          
+          <Button color="secondary border-0`" onClick={toggle}>
             Cancel
           </Button>
         </ModalFooter>
