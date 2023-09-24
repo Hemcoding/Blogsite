@@ -520,30 +520,31 @@ const showAuthDetails = async(req,res)=>{
     //  }
      
      const blogs = await knex('blogs').select('title','description','category','image_destination','image_filename').where('user_id',Tokendata).andWhere('username',Username).orderBy('user_id','desc')
-    console.log(blogs)
+   // console.log(blogs)
      if(blogs.length == 0){
           userInfo[0].blogs = blogs
          }
         
-        //  for(let i=0;i<blogs.length;i++){
+         for(let i=0;i<blogs.length;i++){
 
-        // const image_filename = blogs[0].image_filename
-        // const __filename = fileURLToPath(import.meta.url);
-        // const __dirname = dirname(__filename);
-        // const imagePath = path.join(__dirname,'../../uploads/blogs',image_filename)
+        const image_filename = blogs[0].image_filename
+        const __filename = fileURLToPath(import.meta.url);
+        const __dirname = dirname(__filename);
+        const imagePath = path.join(__dirname,'../../uploads/blogs',image_filename)
 
-        //  if(fs.existsSync(imagePath)){
-        //   const imageBinaryData = fs.readFileSync(imagePath)
+        console.log(imagePath)
+         if(fs.existsSync(imagePath)){
+          const imageBinaryData = fs.readFileSync(imagePath)
   
-        //   const imageBase64 = Buffer.from(imageBinaryData).toString('base64')
+          const imageBase64 = Buffer.from(imageBinaryData).toString('base64')
   
-        //   blogs[0].image = imageBase64
-        //   delete blogs[0].image_filename
-        //   delete blogs[0].image_destination
+          blogs[0].image = imageBase64
+          delete blogs[0].image_filename
+          delete blogs[0].image_destination
         
-        //  }
+         }
 
-        //  }
+         }
 
          userInfo[0].Username = Username
          userInfo[0].user_id = Tokendata
