@@ -10,7 +10,7 @@ import axios from "axios";
 import { Button } from "reactstrap";
 import * as Yup from "yup";
 import { useFormik } from "formik";
-import NavBar from "../User/Navbar/Nav";
+import NavBar from "../Navbar/Nav";
 
 function Blogread() {
   const { blog_id } = useParams();

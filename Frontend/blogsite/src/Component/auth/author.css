@@ -3,12 +3,12 @@
 }
 
 .sub{
+    margin-block: 8%;
     width:80%
 }
 
 .card{
     margin-top: 1rem;
-    /* z-index: -1; */
 }
 
 .btn{

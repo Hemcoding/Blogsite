@@ -1,8 +1,12 @@
 import React from "react";
 import styles from "./autherdetails.module.css";
-import NavBar from "../User/Navbar/Nav";
+import NavBar from "../Navbar/Nav";
+import dummyAuthor from "../../assets/profile.png"
 
 function Autherdetails() {
+
+  const authorImg = localStorage.getItem("url")
+
   return (
     <>
     <div style={{ marginBlock: "100px" }}>
@@ -10,7 +14,7 @@ function Autherdetails() {
 
       <div className="container w-80 main mt-5 mb-5 ">
         <img
-          src="https://m.economictimes.com/thumb/msid-71433991,width-200,height-200,resizemode-4,imgsize-1786236/amit-agarwal-says-hes-lucky-to-receive-a-good-upbringing-in-an-environment-that-valued-humility-honesty-grit-and-gratitude-.jpg"
+          src={authorImg? (authorImg):(dummyAuthor)}
           className="rounded-circle float-start mx-auto p-4 fs-2"
           alt="..."
         />
@@ -31,9 +35,9 @@ function Autherdetails() {
         </div>
       </div>
     </div>
-      <hr style={{width:"80%",margin:"auto"}} />
+      <p className={`${styles.bar}`}/>
       <div className="container flex jastify-content-center">
-        <h3 className="text-center mt-3">Recent 3 Blog</h3>
+        <h3 className="text-center mt-3 text-warning">Your All Blogs</h3>
         <div className="row">
           <div class="card col-4 m-2" style={{ width: "22rem" }}>
             <img
@@ -53,7 +57,7 @@ function Autherdetails() {
             </div>
           </div>
 
-          <div class="card col-4 m-2" style={{ width: "22rem" }}>
+          <div class="card col-4 m-2" style={{ width: "24rem" }}>
             <img
               src="https://www.researchgate.net/publication/29487111/figure/fig1/AS:309919476666377@1450901969318/a-Original-image-of-size-200x200-pixels.png"
               class="card-img-top"

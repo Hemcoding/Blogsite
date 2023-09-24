@@ -14,7 +14,7 @@ const registerUser = async (req, res) => {
   try {
    const {error} =  user.signUp.validate(req.body);
    if(error){
-    return res.staus(400).json({
+    return res.status(400).json({
         Error:true,
         Message:error.message
     })

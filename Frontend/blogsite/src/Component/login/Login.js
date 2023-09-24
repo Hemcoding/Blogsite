@@ -4,7 +4,7 @@ import "./login.scss";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useForm, Controller } from "react-hook-form";
-import { useUser } from "../UserContext";
+import { useUser } from "../User/UserContext";
 
 
 const Login = (props) => {
@@ -40,7 +40,7 @@ const Login = (props) => {
         navigation(home); 
       }
     } catch (error) {
-      console.error(error);
+      console.log(error);
     }
   };
  
@@ -52,12 +52,12 @@ const Login = (props) => {
       >
         <div className="card shadow-lg p-3 box border-warning">
           <div className="card-body">
-            <h1 className="card-title mb-4">Login</h1>
+            <h1 className="card-title mb-4 login-text">Login</h1>
             <Form onSubmit={handleSubmit(onSubmit)} autoComplete="off" noValidate>
               <Row>
                 <Col md={12}>
                   <FormGroup>
-                    <Label for="email">Email</Label>
+                    <Label className="lable" for="email">Email</Label>
                     <Controller
                       name="email"
                       control={control}
@@ -65,11 +65,10 @@ const Login = (props) => {
                       render={({ field }) => (
                         <Input
                           id="email"
-                          placeholder="with a placeholder"
+                          placeholder="eg.abc@gmail.com"
                           type="email"
                           value={field.value}
                           onChange={field.onChange}
-                          // className="border-warning"
                         />
                       )}
                       rules={{
@@ -91,7 +90,7 @@ const Login = (props) => {
               <Row>
                 <Col md={12}>
                   <FormGroup>
-                    <Label for="password">Password</Label>
+                    <Label className="lable" for="password">Password</Label>
                     <Controller
                       name="password"
                       control={control}
@@ -118,7 +117,7 @@ const Login = (props) => {
                   </FormGroup>
                 </Col>
               </Row>
-              <Button style={{border:"none"}} type="submit">Log In</Button>
+              <Button className="text-white" style={{border:"none"}} type="submit">Log In</Button>
             </Form>
             <p className="py-4">
               Don't have an Account? <Link to={route}>Sign Up</Link>

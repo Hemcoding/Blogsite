@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Sep 18, 2023 at 06:36 AM
+-- Generation Time: Sep 24, 2023 at 12:38 PM
 -- Server version: 10.4.28-MariaDB
 -- PHP Version: 8.2.4
 
@@ -20,6 +20,30 @@ SET time_zone = "+00:00";
 --
 -- Database: `blogsite`
 --
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `authdetails`
+--
+
+CREATE TABLE `authdetails` (
+  `id` int(11) NOT NULL,
+  `about` text NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `username` varchar(255) NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `authdetails`
+--
+
+INSERT INTO `authdetails` (`id`, `about`, `user_id`, `username`, `created_at`, `updated_at`) VALUES
+(1, 'This is about author heheeheheheheheeh', 9, 'rahul9730', '2023-09-24 09:51:47', '0000-00-00 00:00:00'),
+(2, 'This is about author heheeheheheheheeh', 9, 'rahul9730', '2023-09-24 09:52:16', '0000-00-00 00:00:00'),
+(3, 'This is about author heheeheheheheheeh', 1, 'rahul', '2023-09-24 10:25:11', '0000-00-00 00:00:00');
 
 -- --------------------------------------------------------
 
@@ -50,14 +74,30 @@ CREATE TABLE `blogs` (
 --
 
 INSERT INTO `blogs` (`blog_id`, `title`, `description`, `image_destination`, `image_filename`, `publish_date`, `likes`, `dislikes`, `created_at`, `updated_at`, `user_id`, `username`, `category_id`, `category`, `status`) VALUES
-(1, 'This is blog title 1', 'the quick brown fox jumped over the lazy dogthe quick brown fox jumped over the lazy dogthe quick brown fox jumped over the lazy dogthe quick brown fox jumped over the lazy dog', './src/uploads/blogs', '1694769309455-image.jfif', '2023-09-15 14:45:09', 0, 0, '2023-09-15 09:15:09', '0000-00-00 00:00:00', 1, 'rahul', 14, 'Sports and Fitness', 'YES'),
-(2, 'This is blog title 2', 'the quick brown fox jumped over the lazy dogthe quick brown fox jumped over the lazy dogthe quick brown fox jumped over the lazy dogthe quick brown fox jumped over the lazy dog', './src/uploads/blogs', '1694770758724-image.jfif', '2023-09-15 15:09:18', 0, 0, '2023-09-15 09:39:18', '0000-00-00 00:00:00', 1, 'rahul', 14, 'Sports and Fitness', 'YES'),
+(2, 'This is blog title 2', 'the quick brown fox jumped over the lazy dogthe quick brown fox jumped over the lazy dogthe quick brown fox jumped over the lazy dogthe quick brown fox jumped over the lazy dog', './src/uploads/blogs', '1694770758724-image.jfif', '2023-09-15 15:09:18', 11, 0, '2023-09-22 06:57:44', '0000-00-00 00:00:00', 1, 'rahul', 14, 'Sports and Fitness', 'YES'),
 (3, 'This is blog title 3', 'the quick brown fox jumped over the lazy dogthe quick brown fox jumped over the lazy dogthe quick brown fox jumped over the lazy dogthe quick brown fox jumped over the lazy dog', './src/uploads/blogs', '1694771896498-image.jfif', '2023-09-15 15:28:16', 0, 0, '2023-09-15 09:58:16', '0000-00-00 00:00:00', 1, 'rahul', 14, 'Sports and Fitness', 'YES'),
 (4, 'This is blog title 4', 'the quick brown fox jumped over the lazy dogthe quick brown fox jumped over the lazy dogthe quick brown fox jumped over the lazy dogthe quick brown fox jumped over the lazy dog', './src/uploads/blogs', '1694771900643-image.jfif', '2023-09-15 15:28:20', 0, 0, '2023-09-15 09:58:20', '0000-00-00 00:00:00', 1, 'rahul', 14, 'Sports and Fitness', 'YES'),
 (5, 'this is a blog', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjp7ImlkIjo3LCJ1c2VybmFtZSI6ImRocnV2In0sImV4cCI6MTY5NDg5ODM0NSwiaWF0IjoxNjk0ODM4MzQ1fQ.6VUZqZqIG6CPb77rHOizvHZUgbrjgCV93rOFtSuh_WkeyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjp7ImlkIjo3LCJ1c2VybmFtZSI6ImRocnV2In0sImV4cCI6MTY5NDg5ODM0NSwiaWF0IjoxNjk0ODM4MzQ1fQ.6VUZqZqIG6CPb77rHOizvHZUgbrjgCV93rOFtSuh_Wk', './src/uploads/blogs', '1694844697465-profilepic.png', '2023-09-16 11:41:37', 0, 0, '2023-09-16 06:11:37', '0000-00-00 00:00:00', 7, 'dhruv', 5, 'Lifestyle', 'YES'),
 (6, 'hjfyiffkfkfkfkufuk', ' {\r\n      user: \'your-email@gmail.com\', // Your Gmail email address\r\n      pass: \'your-email-password\',  // Your Gmail password\r\n    } {\r\n      user: \'your-email@gmail.com\', // Your Gmail email address\r\n      pass: \'your-email-password\',  // Your Gmail password\r\n    } {\r\n      user: \'your-email@gmail.com\', // Your Gmail email address\r\n      pass: \'your-email-password\',  // Your Gmail password\r\n    }', './src/uploads/blogs', '1694846017380-server.png', '2023-09-16 12:03:37', 0, 0, '2023-09-16 06:33:37', '0000-00-00 00:00:00', 7, 'dhruv', 8, 'Personal Development', 'YES'),
 (7, 'bioprjhgpishvpshvpodsvopds', 'pvjdojvozjvopjxzopvjzxopvjopzxvjopzxjvpozxjvopzxjvpozxjvozxjvzxjvpoxzjvopzxjvopzxjvxzpovjzoxpvjozxvjzxjvpzxvjopxzjvoxzjvopzxjvopzxjvopzxjvopzxvovjopzxvjpoxzjvopzxjvopzxjvopzxjovp', './src/uploads/blogs', '1694866560424-Screenshot (1).png', '2023-09-16 17:46:00', 0, 0, '2023-09-16 12:16:00', '0000-00-00 00:00:00', 1, 'rahul', 1, 'Technology', 'YES'),
-(8, 'ssssssssssssssssssssss', 'ssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss', './src/uploads/blogs', '1694867165905-Screenshot (7).png', '2023-09-16 17:56:05', 0, 0, '2023-09-16 12:26:05', '0000-00-00 00:00:00', 10, 'hparmar', 2, 'Travel', 'YES');
+(8, 'ssssssssssssssssssssss', 'ssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss', './src/uploads/blogs', '1694867165905-Screenshot (7).png', '2023-09-16 17:56:05', 1, 0, '2023-09-21 11:56:01', '0000-00-00 00:00:00', 10, 'hparmar', 2, 'Travel', 'YES'),
+(9, 'This is blog title 5', 'the quick brown fox jumped over the lazy dogthe quick brown fox jumped over the lazy dogthe quick brown fox jumped over the lazy dogthe quick brown fox jumped over the lazy dog', './src/uploads/blogs', '1695189832075-image.jfif', '2023-09-20 11:33:52', 0, 0, '2023-09-20 06:03:52', '0000-00-00 00:00:00', 9, 'rahul9730', 14, 'Sports and Fitness', 'YES'),
+(10, 'This is blog title 6', 'the quick brown fox jumped over the lazy dogthe quick brown fox jumped over the lazy dogthe quick brown fox jumped over the lazy dogthe quick brown fox jumped over the lazy dog', './src/uploads/blogs', '1695189839275-image.jfif', '2023-09-20 11:33:59', 0, 1, '2023-09-22 07:27:18', '0000-00-00 00:00:00', 9, 'rahul9730', 14, 'Sports and Fitness', 'YES'),
+(11, 'This is blog title 7', 'the quick brown fox jumped over the lazy dogthe quick brown fox jumped over the lazy dogthe quick brown fox jumped over the lazy dogthe quick brown fox jumped over the lazy dog', './src/uploads/blogs', '1695189845011-image.jfif', '2023-09-20 11:34:05', 0, 0, '2023-09-20 06:04:05', '0000-00-00 00:00:00', 9, 'rahul9730', 14, 'Sports and Fitness', 'YES'),
+(12, 'This is blog title 8', 'the quick brown fox jumped over the lazy dogthe quick brown fox jumped over the lazy dogthe quick brown fox jumped over the lazy dogthe quick brown fox jumped over the lazy dog', './src/uploads/blogs', '1695189851139-image.jfif', '2023-09-20 11:34:11', 0, 0, '2023-09-20 06:04:11', '0000-00-00 00:00:00', 9, 'rahul9730', 14, 'Sports and Fitness', 'YES'),
+(13, 'This is blog title 9', 'the quick brown fox jumped over the lazy dogthe quick brown fox jumped over the lazy dogthe quick brown fox jumped over the lazy dogthe quick brown fox jumped over the lazy dog', './src/uploads/blogs', '1695189856064-image.jfif', '2023-09-20 11:34:16', 0, 0, '2023-09-20 06:04:16', '0000-00-00 00:00:00', 9, 'rahul9730', 14, 'Sports and Fitness', 'YES'),
+(14, 'This is blog title 10', 'the quick brown fox jumped over the lazy dogthe quick brown fox jumped over the lazy dogthe quick brown fox jumped over the lazy dogthe quick brown fox jumped over the lazy dog', './src/uploads/blogs', '1695189861132-image.jfif', '2023-09-20 11:34:21', 0, 0, '2023-09-20 06:04:21', '0000-00-00 00:00:00', 9, 'rahul9730', 14, 'Sports and Fitness', 'YES'),
+(15, 'This is blog title 11', 'the quick brown fox jumped over the lazy dogthe quick brown fox jumped over the lazy dogthe quick brown fox jumped over the lazy dogthe quick brown fox jumped over the lazy dog', './src/uploads/blogs', '1695189865306-image.jfif', '2023-09-20 11:34:25', 0, 0, '2023-09-20 06:04:25', '0000-00-00 00:00:00', 9, 'rahul9730', 14, 'Sports and Fitness', 'YES'),
+(16, 'This is blog title 12', 'the quick brown fox jumped over the lazy dogthe quick brown fox jumped over the lazy dogthe quick brown fox jumped over the lazy dogthe quick brown fox jumped over the lazy dog', './src/uploads/blogs', '1695189869988-image.jfif', '2023-09-20 11:34:30', 0, 0, '2023-09-20 06:04:30', '0000-00-00 00:00:00', 9, 'rahul9730', 14, 'Sports and Fitness', 'YES'),
+(17, 'This is blog title 13', 'the quick brown fox jumped over the lazy dogthe quick brown fox jumped over the lazy dogthe quick brown fox jumped over the lazy dogthe quick brown fox jumped over the lazy dog', './src/uploads/blogs', '1695189874438-image.jfif', '2023-09-20 11:34:34', 0, 0, '2023-09-20 06:04:34', '0000-00-00 00:00:00', 9, 'rahul9730', 14, 'Sports and Fitness', 'YES'),
+(18, 'This is blog title 14', 'the quick brown fox jumped over the lazy dogthe quick brown fox jumped over the lazy dogthe quick brown fox jumped over the lazy dogthe quick brown fox jumped over the lazy dog', './src/uploads/blogs', '1695189878830-image.jfif', '2023-09-20 11:34:38', 0, 0, '2023-09-20 06:04:38', '0000-00-00 00:00:00', 9, 'rahul9730', 14, 'Sports and Fitness', 'YES'),
+(19, 'This is blog title 15', 'the quick brown fox jumped over the lazy dogthe quick brown fox jumped over the lazy dogthe quick brown fox jumped over the lazy dogthe quick brown fox jumped over the lazy dog', './src/uploads/blogs', '1695189883925-image.jfif', '2023-09-20 11:34:43', 0, 0, '2023-09-20 06:04:43', '0000-00-00 00:00:00', 9, 'rahul9730', 14, 'Sports and Fitness', 'YES'),
+(20, 'This is blog title 16', 'the quick brown fox jumped over the lazy dogthe quick brown fox jumped over the lazy dogthe quick brown fox jumped over the lazy dogthe quick brown fox jumped over the lazy dog', './src/uploads/blogs', '1695189890449-image.jfif', '2023-09-20 11:34:50', 0, 0, '2023-09-20 06:04:50', '0000-00-00 00:00:00', 9, 'rahul9730', 14, 'Sports and Fitness', 'YES'),
+(21, 'This is blog title 44', 'the quick brown fox jumped over the lazy dogthe quick brown fox jumped over the lazy dogthe quick brown fox jumped over the lazy dogthe quick brown fox jumped over the lazy dog', './src/uploads/blogs', '1695189984447-image.jfif', '2023-09-20 11:36:24', 0, 0, '2023-09-20 06:06:24', '0000-00-00 00:00:00', 8, 'rahul97', 14, 'Sports and Fitness', 'YES'),
+(22, 'This is blog title 40', 'the quick brown fox jumped over the lazy dogthe quick brown fox jumped over the lazy dogthe quick brown fox jumped over the lazy dogthe quick brown fox jumped over the lazy dog', './src/uploads/blogs', '1695189989954-image.jfif', '2023-09-20 11:36:30', 0, 0, '2023-09-20 06:06:30', '0000-00-00 00:00:00', 8, 'rahul97', 14, 'Sports and Fitness', 'YES'),
+(23, 'This is blog title 90', 'the quick brown fox jumped over the lazy dogthe quick brown fox jumped over the lazy dogthe quick brown fox jumped over the lazy dogthe quick brown fox jumped over the lazy dog', './src/uploads/blogs', '1695189995237-image.jfif', '2023-09-20 11:36:35', 0, 0, '2023-09-20 06:06:35', '0000-00-00 00:00:00', 8, 'rahul97', 14, 'Sports and Fitness', 'YES'),
+(24, 'This is blog title ', 'the quick brown fox jumped over the lazy dogthe quick brown fox jumped over the lazy dogthe quick brown fox jumped over the lazy dogthe quick brown fox jumped over the lazy dog', './src/uploads/blogs', '1695190024937-image.jfif', '2023-09-20 11:37:04', 0, 0, '2023-09-20 06:07:04', '0000-00-00 00:00:00', 8, 'rahul97', 5, 'Lifestyle', 'YES'),
+(25, 'This is blog title 56', 'the quick brown fox jumped over the lazy dogthe quick brown fox jumped over the lazy dogthe quick brown fox jumped over the lazy dogthe quick brown fox jumped over the lazy dog', './src/uploads/blogs', '1695190038892-image.jfif', '2023-09-20 11:37:18', 0, 0, '2023-09-20 06:07:18', '0000-00-00 00:00:00', 8, 'rahul97', 5, 'Lifestyle', 'YES');
 
 -- --------------------------------------------------------
 
@@ -110,10 +150,19 @@ CREATE TABLE `comments` (
   `comment` text NOT NULL,
   `username` varchar(255) NOT NULL,
   `blog_id` int(11) NOT NULL,
+  `image_destination` varchar(255) NOT NULL,
+  `image_filename` varchar(255) NOT NULL,
   `is_deletable` enum('YES','NO') NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
   `updated_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `comments`
+--
+
+INSERT INTO `comments` (`comment_id`, `comment`, `username`, `blog_id`, `image_destination`, `image_filename`, `is_deletable`, `created_at`, `updated_at`) VALUES
+(4, 'This is nice blog', 'hparmar', 10, ' ', ' ', 'YES', '2023-09-22 07:22:12', '0000-00-00 00:00:00');
 
 -- --------------------------------------------------------
 
@@ -172,12 +221,19 @@ INSERT INTO `users` (`user_id`, `username`, `password`, `first_name`, `last_name
 (6, 'mgor', '$2b$15$AzmTUkwL4G.OeOnsaFszj.iyZoLlmHCW6vWqvpNebZ6pN2bW./Z6e', 'Mnatra', 'Gor', 'mantragor@gmail.com', '+916359021267', '', '0', '2023-09-13 12:02:02', '0000-00-00 00:00:00', 'NO', 2),
 (7, 'dhruv', '$2b$15$0Zz7yvjEtA4Q42bwitvONevs1T0.lT.igBWK1QXQ1T30o7qYULeUK', 'Dhruv', 'Tanna', 'dhruv@gmail.com', '+911234567890', './src/uploads/users', '1694838365765-images.jfif', '2023-09-14 04:31:22', '2023-09-16 04:26:05', 'NO', 2),
 (8, 'rahul97', '$2b$15$ZsPLRKC7Pt6b2cqQdojwsuH7ym/oedZiDk7CVKQbDLfTOGi9QiDui', 'Rahul', 'Gusai', 'rahul97@gmail.com', '+911234567890', './src/uploads/users', '1694865099547-download (3).jfif', '2023-09-14 05:01:16', '2023-09-16 11:51:39', 'NO', 2),
-(9, 'rahul9730', '$2b$15$8/snqe/oXSz0Z/KmoMOltuXA35heDwIaUdaKDg.gyyArN.3yDr2Zi', 'Rahul', 'Gusai', 'rahulab9717@gmail.com', '+916353849567', ' ', ' ', '2023-09-16 07:36:35', '2023-09-16 10:46:11', 'NO', 1),
-(10, 'hparmar', '$2b$15$se3f3sd1VVDiuf9qGEmtEO6wJzZBJ6V2rO9B4lg6UTUnDZq5c5Kqq', 'Hemanshu', 'Parmar', 'hemanshup20@gmail.com', '+911234567890', ' ', ' ', '2023-09-16 09:51:49', '0000-00-00 00:00:00', 'NO', 1);
+(9, 'rahul9730', '$2b$15$jtTHOYX4bMV7UcjlkdceA.8rl4F0tF5Ie5RHdGmQW794cS5DEhPIO', 'Rahul', 'Gusai', 'rahulab9717@gmail.com', '+916353849567', ' ', ' ', '2023-09-16 07:36:35', '2023-09-19 11:49:28', 'NO', 1),
+(10, 'hparmar', '$2b$15$se3f3sd1VVDiuf9qGEmtEO6wJzZBJ6V2rO9B4lg6UTUnDZq5c5Kqq', 'Hemanshu', 'Parmar', 'hemanshup20@gmail.com', '+911234567890', ' ', ' ', '2023-09-16 09:51:49', '0000-00-00 00:00:00', 'NO', 1),
+(11, 'rahul9714', '$2b$15$r3MjDg.PhfFqR3n8BWFBPOPjry/pJh3pRegpvJzc.aPDnzMj4OCRa', 'Rahul', 'Gusai', 'rahulab977@gmail.com', '+916353849567', ' ', ' ', '2023-09-22 06:09:11', '0000-00-00 00:00:00', 'NO', 1);
 
 --
 -- Indexes for dumped tables
 --
+
+--
+-- Indexes for table `authdetails`
+--
+ALTER TABLE `authdetails`
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `blogs`
@@ -217,10 +273,16 @@ ALTER TABLE `users`
 --
 
 --
+-- AUTO_INCREMENT for table `authdetails`
+--
+ALTER TABLE `authdetails`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
 -- AUTO_INCREMENT for table `blogs`
 --
 ALTER TABLE `blogs`
-  MODIFY `blog_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `blog_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
 
 --
 -- AUTO_INCREMENT for table `categories`
@@ -232,7 +294,7 @@ ALTER TABLE `categories`
 -- AUTO_INCREMENT for table `comments`
 --
 ALTER TABLE `comments`
-  MODIFY `comment_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `comment_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `roles`
@@ -244,7 +306,7 @@ ALTER TABLE `roles`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- Constraints for dumped tables

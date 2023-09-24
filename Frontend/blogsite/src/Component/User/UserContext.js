@@ -8,9 +8,14 @@ export const UserProvider = ({ children }) => {
   const login = (userData) => {
     setUser(userData);
   };
+  const logout = () => {
+    localStorage.removeItem("user_info");
+    localStorage.removeItem("access_token");
+    setUser(null)
+  };
     
   return (
-    <UserContext.Provider value={{ user, login }}>
+    <UserContext.Provider value={{ user, login ,logout}}>
       {children}
     </UserContext.Provider>
   );
