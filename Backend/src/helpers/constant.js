@@ -6,7 +6,7 @@ const saltRounds = 15;
 
 //Database configuration for Knex
 const dbconfig = {
-  host: "127.0.0.1",
+  host: "localhost",
   port: 3306,
   user: "root",
   password: "",

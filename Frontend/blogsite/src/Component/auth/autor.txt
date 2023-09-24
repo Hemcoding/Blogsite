@@ -1,0 +1,260 @@
+import React, { useEffect, useState } from "react";
+import "./author.css";
+import NavBar from "../User/Navbar/Nav";
+import axios from "axios";
+
+const Author = () => {
+  const [category, setCategory] = useState([]);
+  const [blog, setBlog] = useState({
+    category: "",
+    title: "",
+    image: null,
+    description: "",
+  });
+
+  let name, value;
+  const handleChange = (e) => {
+    name = e.target.name;
+    value = e.target.value;
+
+    setBlog({ ...blog, [name]: value });
+  };
+
+  useEffect(() => {
+    axios
+      .post("http://10.201.1.171:8000/categories/showCategories")
+
+      .then((cat) => setCategory(cat.data.Data))
+      .catch((e) => console.log(e.message));
+  }, [category]);
+
+  
+
+  const onSubmit = async () => {
+    const body = JSON.stringify(blog);
+    console.log(body);
+
+    try {
+      const response = await axios.post(
+        "http://10.201.1.171:8000/blogs/postBlog",
+        body,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      console.log(response);
+
+      if (!response.data.Error) {
+        // setBlog({
+        //   category: "",
+        //   title: "",
+        //   image: "",
+        //   description: "",
+        // });
+        alert("Blog Post Create Successfully");
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  return (
+    <div>
+      <div className="main">
+        <NavBar className="nav" />
+        <div className="container sub">
+          <div className="card p-5 shadow-lg w-100">
+            <h2 className="pb-3">Create a blog</h2>
+            <form className="row g-4" >
+              <div className="select">
+                <label for="category">Choose a Category:</label>
+                <select
+                  name="category"
+                  id="category"
+                  value={blog.category}
+                  onChange={handleChange}
+                >
+                  {category.map((item, index) => (
+                    <option key={index}>{item.name}</option>
+                  ))}
+                </select>
+              </div>
+
+              <div className="col-md-12">
+                <label htmlFor="title" className="form-label">
+                  Title
+                </label>
+                <input
+                  value={blog.title}
+                  onChange={handleChange}
+                  name="title"
+                  type="text"
+                  className="form-control"
+                  id="title"
+                />
+              </div>
+              <div className="col-12">
+                <label htmlFor="image" className="form-label">
+                  Image
+                </label>
+                <input
+                  value={blog.image}
+                  onChange={handleChange}
+                  name="image"
+                  type="file"
+                  className="form-control"
+                  id="image"
+                  
+                />
+              </div>
+              <div className="col-12">
+                <label htmlFor="description" className="form-label">
+                  Description
+                </label>
+                <textarea
+                  value={blog.description}
+                  onChange={handleChange}
+                  name="description"
+                  type="text"
+                  className="form-control"
+                  id="description"
+                  style={{ height: "150px" }}
+                ></textarea>
+              </div>
+              <div className="col-12">
+                <button
+                  // type="submit"
+                  onClick={onSubmit}
+                  className="btn shadow-lg w-100 my-3"
+                  style={{
+                    backgroundColor: "rgb(246, 162, 4)",
+                    color: "black",
+                  }}
+                >
+                  Submit
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default Author;
+
+
+
+import React, { useEffect, useState } from "react";
+import "./author.css";
+import NavBar from "../User/Navbar/Nav";
+import axios from "axios";
+
+const Author = () => {
+  const [category, setCategory] = useState([]);
+ 
+
+ 
+  useEffect(() => {
+    axios
+      .post("http://10.201.1.171:8000/categories/showCategories")
+
+      .then((cat) => setCategory(cat.data.Data))
+      .catch((e) => console.log(e.message));
+  }, [category]);
+
+  
+
+  
+
+  return (
+    <div>
+      <div className="main">
+        <NavBar className="nav" />
+        <div className="container sub">
+          <div className="card p-5 shadow-lg w-100">
+            <h2 className="pb-3">Create a blog</h2>
+            <form className="row g-4" >
+              <div className="select">
+                <label for="category">Choose a Category:</label>
+                <select
+                  name="category"
+                  id="category"
+                  value={blog.category}
+                  onChange={handleChange}
+                >
+                  {category.map((item, index) => (
+                    <option key={index}>{item.name}</option>
+                  ))}
+                </select>
+              </div>
+
+              <div className="col-md-12">
+                <label htmlFor="title" className="form-label">
+                  Title
+                </label>
+                <input
+                  value={blog.title}
+                  onChange={handleChange}
+                  name="title"
+                  type="text"
+                  className="form-control"
+                  id="title"
+                />
+              </div>
+              <div className="col-12">
+                <label htmlFor="image" className="form-label">
+                  Image
+                </label>
+                <input
+                  value={blog.image}
+                  onChange={handleChange}
+                  name="image"
+                  type="file"
+                  className="form-control"
+                  id="image"
+                  
+                />
+              </div>
+              <div className="col-12">
+                <label htmlFor="description" className="form-label">
+                  Description
+                </label>
+                <textarea
+                  value={blog.description}
+                  onChange={handleChange}
+                  name="description"
+                  type="text"
+                  className="form-control"
+                  id="description"
+                  style={{ height: "150px" }}
+                ></textarea>
+              </div>
+              <div className="col-12">
+                <button
+                  // type="submit"
+                  onClick={onSubmit}
+                  className="btn shadow-lg w-100 my-3"
+                  style={{
+                    backgroundColor: "rgb(246, 162, 4)",
+                    color: "black",
+                  }}
+                >
+                  Submit
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default Author;
+
+
+
