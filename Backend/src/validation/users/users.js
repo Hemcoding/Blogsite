@@ -63,9 +63,16 @@ const passwordReset = Joi.object({
     "string.length": `"Password" must contain 8 to 35 characters.`,
   })
 })
+
+const aboutAuth = Joi.object({
+  about : Joi.string().min(20).required().messages({
+    'string.empty':`"About is a required field."`
+  })
+})
 export default {
   signUp,
   login,
   passwordResetEmail,
-  passwordReset
+  passwordReset,
+  aboutAuth
 };

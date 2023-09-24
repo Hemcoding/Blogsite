@@ -8,6 +8,8 @@ router.post('/registerUser',users.registerUser)
 router.post('/loginUser',users.userLogin)
 router.post('/setProfile',user.upload.single('image'),users.imageUpload)
 router.post('/getProfile',users.getProfile)
+router.post('/aboutAuth',users.aboutAuth)
+router.post('/authInfo',users.showAuthDetails)
 router.post('/resetPasswordEmail',users.resetPasswordEmail)
 router.post('/resetPassword',users.resetPassword)
 
