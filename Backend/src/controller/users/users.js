@@ -93,7 +93,7 @@ const userLogin = async (req, res) => {
    // let login;
   //  if(email){
    const login = await knex("users")
-      .select("user_id", "username", "password","first_name","last_name","mobile_no","profile_destination","profile_filename")
+      .select("user_id", "username", "password","first_name","last_name","email","mobile_no","profile_destination","profile_filename")
       .where("username", email)
       .orWhere("email", email);
     //}
@@ -152,7 +152,7 @@ const userLogin = async (req, res) => {
       first_name:login[0].first_name,
       last_name:login[0].last_name,
       mobile_no:login[0].mobile_no,
-      email:email,
+      email:login[0].email,
       image:login[0].image
     }
 
@@ -437,6 +437,139 @@ const resetPassword = async(req,res)=>{
   }
 }
 
+const aboutAuth = async(req,res)=>{
+  try {
+
+    const  {error} = user.aboutAuth.validate(req.body)
+    if(error){
+      return res.staus(400).json({
+          Error:true,
+          Message:error.message
+      })
+   }
+
+   const token = req.headers.authorization.split(" ")[1]
+  // console.log(token)
+  const temp =  jwt.verify(token, constant.accessToken.secret).data
+   const Tokendata = temp.id
+   const Username = temp.username
+
+   const {about} = req.body
+
+   const data = {
+      about : about,
+      user_id:Tokendata,
+      username:Username
+   }
+
+   const aboutAuthadd = await knex('authDetails').insert(data)
+
+   if(aboutAuthadd.length == 0){
+    return res.status(409).json({
+      Error: true,
+      Message: "NO data has been inserted",
+    });
+   }
+
+   return res.status(201).json({
+    Error: false,
+    Message: "Data has been inserted",
+    Data : aboutAuthadd
+  });
+
+
+  } catch (error) {
+    return res.status(500).json({
+      Error: true,
+      Message: error.message,
+    });
+  }
+}
+
+const showAuthDetails = async(req,res)=>{
+  try {
+    const token = req.headers.authorization.split(" ")[1]
+    // console.log(token)
+    const temp =  jwt.verify(token, constant.accessToken.secret).data
+     const Tokendata = temp.id
+     const Username = temp.username
+
+     const userInfo = await knex('authdetails').select('about').where('user_id',Tokendata).andWhere('username',Username)
+
+     if(userInfo.length == 0){
+      return res.status(409).json({
+        Error: true,
+        Message: "NO data has been found",
+      });
+     }
+     
+     const photo = await knex('users').select('profile_destination','profile_filename').where('username',Username).andWhere('user_id',Tokendata)
+    //  if(photo[0].profile_filename == ''){
+    //   const image_filename = photo[0].profile_filename
+    //   const __filename = fileURLToPath(import.meta.url);
+    //   const __dirname = dirname(__filename);
+    //   const imagePath = path.join(__dirname,'../../uploads/users',image_filename)
+
+    //    if(fs.existsSync(imagePath)){
+    //     const imageBinaryData = fs.readFileSync(imagePath)
+
+    //     const imageBase64 = Buffer.from(imageBinaryData).toString('base64')
+
+    //     userInfo[0].image =imageBase64
+      
+    //    }
+    //  }
+     
+     const blogs = await knex('blogs').select('title','description','category','image_destination','image_filename').where('user_id',Tokendata).andWhere('username',Username).orderBy('user_id','desc')
+    console.log(blogs)
+     if(blogs.length == 0){
+          userInfo[0].blogs = blogs
+         }
+        
+        //  for(let i=0;i<blogs.length;i++){
+
+        // const image_filename = blogs[0].image_filename
+        // const __filename = fileURLToPath(import.meta.url);
+        // const __dirname = dirname(__filename);
+        // const imagePath = path.join(__dirname,'../../uploads/blogs',image_filename)
+
+        //  if(fs.existsSync(imagePath)){
+        //   const imageBinaryData = fs.readFileSync(imagePath)
+  
+        //   const imageBase64 = Buffer.from(imageBinaryData).toString('base64')
+  
+        //   blogs[0].image = imageBase64
+        //   delete blogs[0].image_filename
+        //   delete blogs[0].image_destination
+        
+        //  }
+
+        //  }
+
+         userInfo[0].Username = Username
+         userInfo[0].user_id = Tokendata
+         userInfo[0].blogs = blogs
+
+         return res.json({
+            Error:false,
+            Message :'This is user detail',
+            Data : userInfo
+         })
+
+  } catch (error) {
+    if(error.name === 'JsonWebTokenError'){
+      return res.status(401).json({
+        Error: true,
+        Message: error.message,
+      })
+    }
+    return res.status(500).json({
+      Error: true,
+      Message: error.message,
+    });
+  }
+}
+
 export default {
   registerUser,
   userLogin,
@@ -444,5 +577,7 @@ export default {
   getProfile,
   deleteUser,
   resetPasswordEmail,
-  resetPassword
+  resetPassword,
+  aboutAuth,
+  showAuthDetails
 };

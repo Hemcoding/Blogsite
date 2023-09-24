@@ -1,6 +1,7 @@
 import multer from "multer";
 // import test from '../../uploads/blogs'
 
+//Accessing localStorage by Multer for Image storing
  const storage = multer.diskStorage({
     destination:(req,file,cb)=>{
         return cb(null,'./src/uploads/blogs')

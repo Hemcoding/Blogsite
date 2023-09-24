@@ -4,7 +4,7 @@ import category from '../../middleware/categories/categories.js'
 
 const addCategory = async(req,res)=>{m 
     try {
-     const {error} = await categories.verifyCategory.validateAsync(req.body)
+     const {error} = await categories.verifyCategory.validate(req.body)
         if(error){
             return res.json({
                 Error:true,
@@ -23,7 +23,7 @@ const addCategory = async(req,res)=>{m
             })
         }
 
-        console.log(category.formatCategory(name))
+      //  console.log(category.formatCategory(name))
         const data = {
             name:category.formatCategory(name),
             status:'YES'
