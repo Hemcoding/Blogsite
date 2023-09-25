@@ -53,7 +53,7 @@ const registerUser = async (req, res) => {
       mobile_no: mobileno,
       profile_destination:" ",
       profile_filename:" ",
-      status: "NO",
+      status: "YES",
       role_id: roles[0].role_id,
     };
 
@@ -440,7 +440,6 @@ const resetPassword = async(req,res)=>{
 
 const aboutAuth = async(req,res)=>{
   try {
-
     const  {error} = user.aboutAuth.validate(req.body)
     if(error){
       return res.staus(400).json({
@@ -450,7 +449,7 @@ const aboutAuth = async(req,res)=>{
    }
 
    const token = req.headers.authorization.split(" ")[1]
-   console.log(token)
+  // console.log(token)
   const temp =  jwt.verify(token, constant.accessToken.secret).data
    const Tokendata = temp.id
    const Username = temp.username
@@ -495,15 +494,13 @@ const showAuthDetails = async(req,res)=>{
      const Tokendata = temp.id
      const Username = temp.username
 
-     const userInfo = await knex('authdetails').select('about').where('user_id',Tokendata).andWhere('username',Username)
+     let userInfo = await knex('authdetails').select('about').where('user_id',Tokendata).andWhere('username',Username)
 
      if(userInfo.length == 0){
-      return res.status(409).json({
-        Error: true,
-        Message: "NO data has been found",
-      });
-     }
-     
+        userInfo = [{about:""}]
+      }
+
+  
      const photo = await knex('users').select('profile_destination','profile_filename').where('username',Username).andWhere('user_id',Tokendata)
      if(photo[0].profile_filename != ''){
       const image_filename = photo[0].profile_filename
@@ -568,6 +565,8 @@ const showAuthDetails = async(req,res)=>{
     });
   }
 }
+
+
 
 export default {
   registerUser,
