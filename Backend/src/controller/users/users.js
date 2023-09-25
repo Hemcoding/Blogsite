@@ -9,6 +9,7 @@ import { fileURLToPath } from 'url';
 import { dirname } from 'path';
 import path from 'path'
 import fs from 'fs'
+import { Console } from "console";
 
 const registerUser = async (req, res) => {
   try {
@@ -449,7 +450,7 @@ const aboutAuth = async(req,res)=>{
    }
 
    const token = req.headers.authorization.split(" ")[1]
-  // console.log(token)
+   console.log(token)
   const temp =  jwt.verify(token, constant.accessToken.secret).data
    const Tokendata = temp.id
    const Username = temp.username
@@ -504,23 +505,22 @@ const showAuthDetails = async(req,res)=>{
      }
      
      const photo = await knex('users').select('profile_destination','profile_filename').where('username',Username).andWhere('user_id',Tokendata)
-    //  if(photo[0].profile_filename == ''){
-    //   const image_filename = photo[0].profile_filename
-    //   const __filename = fileURLToPath(import.meta.url);
-    //   const __dirname = dirname(__filename);
-    //   const imagePath = path.join(__dirname,'../../uploads/users',image_filename)
+     if(photo[0].profile_filename != ''){
+      const image_filename = photo[0].profile_filename
+      const __filename = fileURLToPath(import.meta.url);
+      const __dirname = dirname(__filename);
+      const imagePath = path.join(__dirname,'../../uploads/users',image_filename)
 
-    //    if(fs.existsSync(imagePath)){
-    //     const imageBinaryData = fs.readFileSync(imagePath)
+       if(fs.existsSync(imagePath)){
+        const imageBinaryData = fs.readFileSync(imagePath)
 
-    //     const imageBase64 = Buffer.from(imageBinaryData).toString('base64')
+        const imageBase64 = Buffer.from(imageBinaryData).toString('base64')
 
-    //     userInfo[0].image =imageBase64
-      
-    //    }
-    //  }
+        userInfo[0].image =imageBase64
+       }
+     }
      
-     const blogs = await knex('blogs').select('title','description','category','image_destination','image_filename').where('user_id',Tokendata).andWhere('username',Username).orderBy('user_id','desc')
+     const blogs = await knex('blogs').select('blog_id','title','description','category','image_destination','image_filename').where('user_id',Tokendata).andWhere('username',Username).orderBy('user_id','desc')
    // console.log(blogs)
      if(blogs.length == 0){
           userInfo[0].blogs = blogs
@@ -528,24 +528,22 @@ const showAuthDetails = async(req,res)=>{
         
          for(let i=0;i<blogs.length;i++){
 
-        const image_filename = blogs[0].image_filename
-        const __filename = fileURLToPath(import.meta.url);
-        const __dirname = dirname(__filename);
-        const imagePath = path.join(__dirname,'../../uploads/blogs',image_filename)
-
-        console.log(imagePath)
+          const image_filename = blogs[i].image_filename
+          const __filename = fileURLToPath(import.meta.url);
+          const __dirname = dirname(__filename);
+           const imagePath = path.join(__dirname,'../../uploads/blogs',image_filename)
+           
          if(fs.existsSync(imagePath)){
           const imageBinaryData = fs.readFileSync(imagePath)
   
           const imageBase64 = Buffer.from(imageBinaryData).toString('base64')
   
-          blogs[0].image = imageBase64
-          delete blogs[0].image_filename
-          delete blogs[0].image_destination
+          blogs[i].image =imageBase64
         
          }
-
-         }
+  
+          }
+  
 
          userInfo[0].Username = Username
          userInfo[0].user_id = Tokendata
