@@ -7,8 +7,9 @@ import path from 'path'
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
 
+
 import formidable from 'formidable'
-import blog from '../../middleware/blogs/blogs.js'
+
 
 /*
 const tempblog = async(req,res)=>{
@@ -95,7 +96,12 @@ const tempblog = async(req,res)=>{
 
 const postBlog = async(req,res)=>{
     try {
-      //  console.log(req.body)
+        if (req.error) {
+            // Handle the error and send it as a JSON response
+           return res.status(500).json({ 
+            Error : true,
+            Message: req.error.message });
+          } 
       //Validating file
         if(!req.file){
             return res.status(404).json({
@@ -103,7 +109,17 @@ const postBlog = async(req,res)=>{
                 Message:"Please upload the file"
             })
         }
+        const extension ={
+            extension: req.file.originalname.split(".")[1]
+        }
 
+        const {err} = blogs.fileCheck.validate(extension)
+        if(err){
+            return res.status(400).json({
+                Error : true,
+                Message:error.message
+            })
+        }
         //Validation for posting blog
         const {error} = blogs.verifyBlog.validate(req.body)
         if(error){
@@ -112,7 +128,7 @@ const postBlog = async(req,res)=>{
                 Message:error.message
             })
         }
-
+    
         //Destructuring the req object (body , file)
         const {title , description , category} = req.body 
         const {destination , filename} = req.file

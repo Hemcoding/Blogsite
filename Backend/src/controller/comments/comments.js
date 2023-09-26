@@ -32,7 +32,13 @@ const postComment = async(req,res)=>{
         // console.log(token)
          const Tokendata = jwt.verify(token, constant.accessToken.secret).data.id
 
-         const username2 = await knex('users').select('username','profile_destination','profile_filename').where('user_id',Tokendata)
+         const username2 = await knex('users').select('username','profile_destination','profile_filename').where('user_id',Tokendata).andWhere('role_id',2)
+         if(username2.length == 0){
+            return res.json({
+                Error:true,
+                Message :'Invalid Credentials'
+            })
+         }
          const username = username2[0].username
          const image_destination = username2[0].profile_destination
          const image_filename = username2[0].profile_filename
@@ -132,6 +138,7 @@ const getComment = async(req,res)=>{
         })
     }
 }
+
 
 export default {
     postComment,

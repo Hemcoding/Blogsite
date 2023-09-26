@@ -11,7 +11,20 @@ import multer from "multer";
     }
 })
 
- const upload = multer({storage:storage})
+const imageFilter = (req, file, cb) => {
+    if (file.mimetype.startsWith('image/')) {
+      cb(null, true)
+    } else {
+        const error = new Error('Not an image! Please upload an image.');
+        req.error = error
+        cb(null, false);
+    }
+
+    
+  };
+
+ const upload = multer({storage:storage , fileFilter:imageFilter})
+ 
 
 export default { 
     upload

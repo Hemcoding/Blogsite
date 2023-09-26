@@ -13,7 +13,20 @@ import constant from "../../helpers/constant.js";
         return cb(null,`${Date.now()}-${file.originalname}`)
     }
 })
-const upload = multer({storage:storage})
+
+const imageFilter = (req, file, cb) => {
+  if (file.mimetype.startsWith('image/')) {
+    cb(null, true)
+  } else {
+      const error = new Error('Not an image! Please upload an image.');
+      req.error = error
+      cb(null, false);
+  }
+
+  
+};
+
+const upload = multer({storage:storage , fileFilter:imageFilter})
 
 //Transporter for sending mail 
 const transporter = nodemailer.createTransport({

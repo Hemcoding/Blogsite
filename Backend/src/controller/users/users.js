@@ -9,7 +9,6 @@ import { fileURLToPath } from 'url';
 import { dirname } from 'path';
 import path from 'path'
 import fs from 'fs'
-import { Console } from "console";
 
 const registerUser = async (req, res) => {
   try {
@@ -22,16 +21,6 @@ const registerUser = async (req, res) => {
  }
     const { username, password, firstname, lastname, email, mobileno, role } = req.body;
 
-    const roles = await knex("roles")
-      .select("role_id")
-      .where("name", "=", role);
-
-    if (!roles) {
-      return res.status(400).json({
-        Error: true,
-        Message: "Please provide proper role",
-      });
-    }
     if ( await checkUsername(username, email) == "Username or Email Unavailable" ) {
       return res.status(409).json({
         Error: true,
@@ -54,7 +43,7 @@ const registerUser = async (req, res) => {
       profile_destination:" ",
       profile_filename:" ",
       status: "YES",
-      role_id: roles[0].role_id,
+      role: role,
     };
 
     const insertedRows = await knex("users").insert(data);
@@ -94,7 +83,7 @@ const userLogin = async (req, res) => {
    // let login;
   //  if(email){
    const login = await knex("users")
-      .select("user_id", "username", "password","first_name","last_name","email","mobile_no","profile_destination","profile_filename")
+      .select("user_id", "username", "password","first_name","last_name","email","mobile_no","profile_destination","profile_filename","role")
       .where("username", email)
       .orWhere("email", email);
     //}
@@ -154,7 +143,8 @@ const userLogin = async (req, res) => {
       last_name:login[0].last_name,
       mobile_no:login[0].mobile_no,
       email:login[0].email,
-      image:login[0].image
+      image:login[0].image,
+      role:login[0].role
     }
 
     res.status(200).json({
@@ -175,6 +165,12 @@ const userLogin = async (req, res) => {
 
 const imageUpload = async(req,res)=>{
   try {
+    if (req.error) {
+      // Handle the error and send it as a JSON response
+     return res.status(500).json({ 
+      Error : true,
+      Message: req.error.message });
+    } 
     if(!req.file){
       return res.status(404).json({
           Error:true,
@@ -183,6 +179,7 @@ const imageUpload = async(req,res)=>{
   }
 
   const {destination , filename} = req.file
+
   const token = req.headers.authorization.split(" ")[1]
   // console.log(token)
   const temp =  jwt.verify(token, constant.accessToken.secret).data
@@ -500,7 +497,9 @@ const showAuthDetails = async(req,res)=>{
         userInfo = [{about:""}]
       }
 
-  
+      userInfo[0].Username = Username
+      userInfo[0].user_id = Tokendata
+
      const photo = await knex('users').select('profile_destination','profile_filename').where('username',Username).andWhere('user_id',Tokendata)
      if(photo[0].profile_filename != ''){
       const image_filename = photo[0].profile_filename
@@ -536,14 +535,13 @@ const showAuthDetails = async(req,res)=>{
           const imageBase64 = Buffer.from(imageBinaryData).toString('base64')
   
           blogs[i].image =imageBase64
-        
+          
          }
   
           }
   
 
-         userInfo[0].Username = Username
-         userInfo[0].user_id = Tokendata
+         
          userInfo[0].blogs = blogs
 
          return res.json({

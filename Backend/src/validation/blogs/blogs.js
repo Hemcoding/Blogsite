@@ -88,6 +88,10 @@ const fetchBlogsById = Joi.object({
   })
 })
 
+const fileCheck = Joi.object({
+  extension: Joi.string().valid('.jpeg', '.jpg', '.png', '.gif', '.bmp', '.tiff', '.tif', '.webp', '.svg', '.ico', '.heic', '.heif')
+})
+
 export default {
   verifyBlog,
   likes,
@@ -96,5 +100,6 @@ export default {
   fetchBlog,
   deleteBlog,
   fetchBlogsUser,
-  fetchBlogsById
+  fetchBlogsById,
+  fileCheck
 };
