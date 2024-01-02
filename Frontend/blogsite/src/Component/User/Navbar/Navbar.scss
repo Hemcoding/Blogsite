@@ -1,0 +1,62 @@
+
+.nav{
+    background-color: rgb(244, 187, 82);
+    box-shadow: 5px 5px 15px rgb(74, 74, 74);
+    position: fixed;
+    top:0;
+    
+    .Container{
+        width: 90%;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin: auto;
+
+        .sub-Container{
+            display: flex;
+            align-items: baseline;
+            width: 55%;
+            padding-top: 1rem;
+
+            .navbar-links{
+                width: 55%;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                list-style-type: none;
+                text-decoration: none;
+            }
+        }
+
+    }
+}
+
+.link{
+    text-decoration: none;
+    color: rgb(0, 0, 0);
+    h4{
+        a:hover{
+            color: white;
+            cursor: pointer;
+        }
+    }
+}
+
+
+.user-img{
+    width: 25%;
+    aspect-ratio: 1/1;
+    border-radius: 50%;
+}
+
+.user-profile{
+    width: 16%;
+    font-size: 1.2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    p{
+        padding-top: 0.8rem;
+    }
+}
