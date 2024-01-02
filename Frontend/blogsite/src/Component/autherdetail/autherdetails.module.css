@@ -1,0 +1,27 @@
+.mydesign{
+    overflow: auto;
+    }
+    
+    
+.container{
+    width: 80%;
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+.details{
+   /* background-color: brown; */
+   padding-top: 20px;
+   margin-top: 0;
+}
+/* .card{
+    height: 150px;
+    width: 150px;
+    
+} */
+.bar{
+   border-bottom: 2px dotted orange !important;
+   width: 80%;
+   margin: auto;
+}
+/* style={{width:"80%",margin:"auto",color:"orange"}}  */

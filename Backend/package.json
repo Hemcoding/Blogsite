@@ -3,9 +3,27 @@
   "version": "1.0.0",
   "description": "\"Backend for BlogSite\"",
   "main": "index.js",
+  "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "nodemon index.js"
   },
   "author": "\"Mahima & Rahul\"",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "bcrypt": "^5.1.1",
+    "cors": "^2.8.5",
+    "ejs": "^3.1.9",
+    "express": "^4.18.2",
+    "formidable": "^3.5.1",
+    "fs": "^0.0.1-security",
+    "joi": "^17.10.1",
+    "jsonwebtoken": "^9.0.2",
+    "knex": "^2.5.1",
+    "multer": "^1.4.5-lts.1",
+    "mysql": "^2.18.1",
+    "mysql2": "^3.6.1",
+    "nodemailer": "^6.9.5",
+    "nodemon": "^3.0.1",
+    "path": "^0.12.7"
+  }
 }

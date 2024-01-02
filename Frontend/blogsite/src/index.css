@@ -2,4 +2,11 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+<<<<<<< HEAD
+=======
+}
+
+body::-webkit-scrollbar {
+  display: none;
+>>>>>>> 9b9469a3b61ffd1a6c2d5b35ce508bfb92c1ff6a
 }
